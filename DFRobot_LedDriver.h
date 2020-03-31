@@ -1,4 +1,15 @@
-
+/*!
+ * @file DFRobot_MY9221SS.h
+ * @brief Define the basic structure of class DFRobot_MY9221SS
+ * @n 
+ *
+ * @copyright   Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
+ * @licence     The MIT License (MIT)
+ * @author [YeHangYu](hangyu.ye@dfrobot.com)
+ * @version  V1.0
+ * @date  2020-03-30
+ * @https://github.com/DFRobot/DFRobot_MY9221SS
+ */
 #ifndef __DFROBOT_LEDDRIVER_H
 #define __DFRobot_LEDDRIVER_H
 
@@ -8,19 +19,13 @@
 #include <WProgram.h>
 #endif
 
-#define ENABLE_DBG   1
+#define ENABLE_DBG   0
 #ifdef ENABLE_DBG
 #define DBG(...) {Serial.print("[");Serial.print(__FUNCTION__); Serial.print("(): "); Serial.print(__LINE__); Serial.print(" ] "); Serial.println(__VA_ARGS__);}
 #else
 #define DBG(...)
 #endif
 
-#define __DBG   1
-#if __DBG
-# define __DBG_CODE(x)   Serial.print("__DBG_CODE: "); Serial.print(__FUNCTION__); Serial.print(" "); Serial.print(__LINE__); Serial.print(" "); x; Serial.println()
-#else
-# define __DBG_CODE(x)
-#endif
 
 #define LED_BIN_COUNT   12            //芯片的RGB引脚总数
 
@@ -33,7 +38,6 @@
 */
 #define LED_TURN_OFF           0     //关闭LED灯
 #define LED_FULL_BRIGHTNESS    0xff  //打开LED灯（最亮）
-#define LED_BRIGHTNESS_RANGE   65/255//控制亮度范围
 
 #define  COLOR_RGB565_BLACK     0x0000      // 黑色    
 #define  COLOR_RGB565_NAVY      0x000F      // 深蓝色  
@@ -53,7 +57,7 @@
 #define  COLOR_RGB565_WHITE     0xFFFF      // 白色  
 
 
-class MY9221SS
+class DFRobot_MY9221SS
 {
 public:
   /*
@@ -82,26 +86,19 @@ public:
     uint8_t   onest:1; /*!< 1：画面只亮一次模式(仅当cntset="1"时可用) 0：画面重复显示模式 */
   } __attribute__ ((packed)) sMode_t;
 
+  
 public:
-  MY9221SS(uint32_t pinClock, uint32_t pinData);
+  DFRobot_MY9221SS(uint32_t pinClock, uint32_t pinData);
+  void begin(void);//初始化
   void sendcmd(uint16_t bits);  //发送16位CMD命令
   void senddata(uint16_t bits); //每次调用发送16位数据
-  void send();                  //调用发送全部208位数据
   void latch();                 //内部栓锁的控制
+  void send(uint16_t* buf);     //发送全部208位数据
 
-protected:
+private:
   uint32_t _pinClock;
   uint32_t _pinData;
-  uint8_t  led[LED_BIN_COUNT];
-};
-
-class DFRobot_LedDriver :public MY9221SS
-{
-public:
-  DFRobot_LedDriver(uint32_t pinClock, uint32_t pinData);
-  void setLed(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B);
-  void setLed(uint8_t ledNo, uint16_t color, uint8_t brightness);
-  void setAllLed(uint16_t R, uint16_t G, uint16_t B);
-  void marquee();
+  sMode_t  mode;
+  uint16_t _mode;
 };
 #endif
