@@ -1,15 +1,15 @@
 /*!
  * @file setLedRgb888.ino
- * @brief 用给出的宏定义设置图片颜色和亮度
+ * @brief 用3个八位的RGB值设置灯的颜色
  * @n 本示例支持的主板有ESP8266、FireBeetle-M0,MAGE2560，UNO
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
  * @author [YeHangYu](hangyu.ye@dfrobot.com)
  * @version  V0.1
  * @date  2020-03-20
- * @url https://github.com/DFRobot/DFRobot_G
+ * @url https://github.com/DFRobot/DFRobot_MY9221SS
  */
-#include <DFRobot_LedDriver.h>
+#include <DFRobot_MY9221SS.h>
 
 //自定义通信引脚
 /*FireBeetle-M0*/
@@ -42,24 +42,21 @@ DFRobot_MY9221SS rgbdriver(/*pinClock=*/MY9221SS_DCK, /*pinData=*/MY9221SS_D);
 void setup() {
   //初始化串口
   Serial.begin(115200);
-  while (!Serial)
-  {
-    ; //等待串口连接
-  }
+  
   //初始化LED灯驱动
   rgbdriver.begin();
 }
 
 void loop() {
   /**
-   * @brief 设置某个灯的RGB颜色，这里将4号灯设置为紫色，对应引脚A3B3C3  
+   * @brief 设置某个灯的RGB颜色，这里将4号灯设置为黄色，对应引脚A3B3C3  
    * @param ledNo 设置的灯的编号，取值1~4
    * @param R     设置RGB红色分量，硬件应连接引脚B，取值范围0~255
    * @param G     设置RGB绿色分量，硬件应连接引脚C，取值范围0~255
    * @param B     设置RGB蓝色分量，硬件应连接引脚A，取值范围0~255
   */
-  setLed(/*ledNo=*/4,/*R=*/1,/*G=*/0,/*B=*/1);
-  delay(1000);                                                                              
+  setLed(/*ledNo=*/4,/*R=*/LED_FULL_BRIGHTNESS,/*G=*/LED_FULL_BRIGHTNESS,/*B=*/LED_TURN_OFF );
+  delay(1000);
 }
 
 void setLed(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B)

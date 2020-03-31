@@ -7,9 +7,9 @@
  * @author [YeHangYu](hangyu.ye@dfrobot.com)
  * @version  V0.1
  * @date  2020-03-20
- * @url https://github.com/DFRobot/DFRobot_G
+ * @url https://github.com/DFRobot/DFRobot_MY9221SS
  */
-#include <DFRobot_LedDriver.h>
+#include <DFRobot_MY9221SS.h>
 
 //自定义通信引脚
 /*FireBeetle-M0*/
@@ -50,10 +50,6 @@ DFRobot_MY9221SS rgbdriver(/*pinClock=*/MY9221SS_DCK, /*pinData=*/MY9221SS_D);
 void setup() {
   //初始化串口
   Serial.begin(115200);
-  while (!Serial)
-  {
-    ; //等待串口连接
-  }
   //初始化LED灯驱动
   rgbdriver.begin();
 }
@@ -104,7 +100,7 @@ void setLed(uint8_t ledNo, uint16_t color, uint8_t brightness)
         led[i] = LED_TURN_OFF;
       }
     }
-    rgbdriver.send(led);//向芯片发送数据，12个引脚，每个16bit，共208bit
+    rgbdriver.send(led);//向芯片发送数据，12个引脚，每个16bit
   }
   else
   {

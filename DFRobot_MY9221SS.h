@@ -10,8 +10,8 @@
  * @date  2020-03-30
  * @https://github.com/DFRobot/DFRobot_MY9221SS
  */
-#ifndef __DFROBOT_LEDDRIVER_H
-#define __DFRobot_LEDDRIVER_H
+#ifndef _DFROBOT_MY9221SS_H
+#define _DFRobot_MY9221SS_H
 
 #if (ARDUINO >= 100)
 #include <Arduino.h>
@@ -88,12 +88,40 @@ public:
 
   
 public:
+  /*!
+   *@brief 构造函数
+   *@param pinClock 时钟引脚
+   *@param pinData  数据引脚
+   */
   DFRobot_MY9221SS(uint32_t pinClock, uint32_t pinData);
-  void begin(void);//初始化
-  void sendcmd(uint16_t bits);  //发送16位CMD命令
-  void senddata(uint16_t bits); //每次调用发送16位数据
-  void latch();                 //内部栓锁的控制
-  void send(uint16_t* buf);     //发送全部208位数据
+  
+  /*!
+   *@brief 初始化
+   */
+  void begin(void);
+
+  /*!
+   *@brief 发送16位CMD命令
+   *@param bits 16位数据
+   */
+  void sendcmd(uint16_t bits);  
+
+  /*!
+   *@brief 每次调用发送16位数据
+   *@param bits 16位数据
+   */
+  void senddata(uint16_t bits); 
+
+  /*!
+   *@brief 内部栓锁的控制
+   */
+  void latch(void);   
+
+  /*!
+   *@brief 发送全部208位数据
+   *@param buf 指向192bit灰阶数据的指针，从控制引脚A3的16bit数据开始发送
+   */
+  void send(uint16_t* buf);     
 
 private:
   uint32_t _pinClock;

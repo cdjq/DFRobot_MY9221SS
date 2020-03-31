@@ -1,7 +1,7 @@
 /*!
  * @file DFRobot_MY9221SS.h
  * @brief Define the basic structure of class DFRobot_MY9221SS
- * 
+ *
  * @copyright   Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
  * @author [YeHangYu](hangyu.ye@dfrobot.com)
@@ -9,13 +9,13 @@
  * @date  2020-03-30
  * @https://github.com/DFRobot/DFRobot_MY9221SS
  */
-#include "DFRobot_LedDriver.h"
+#include "DFRobot_MY9221SS.h"
 
 DFRobot_MY9221SS::DFRobot_MY9221SS(uint32_t pinClock, uint32_t pinData)
   :_pinData(pinData),
    _pinClock(pinClock)
 {
-  
+
 }
 void DFRobot_MY9221SS::begin(void)//初始化
 {
@@ -47,14 +47,11 @@ void DFRobot_MY9221SS::senddata(uint16_t bits)//每次调用发送16位数据
 {
   for (uint8_t i = 0, clk = 1; i < 16; i++)
   {
-      // Serial.print((bits & 0x8000)/0x8000);Serial.print(" ");
-      
-      digitalWrite(_pinData, bits & 0x8000 ? HIGH : LOW);//数据发送
-      digitalWrite(_pinClock, clk);//时钟上升沿下降沿，数据有效
+    digitalWrite(_pinData, bits & 0x8000 ? HIGH : LOW);//数据发送
+    digitalWrite(_pinClock, clk);//时钟上升沿下降沿，数据有效
     clk = 1-clk;
     bits <<= 1;
   }
-  // Serial.print("\n");
 }
 
 void DFRobot_MY9221SS::latch()//内部栓锁的控制
@@ -85,7 +82,6 @@ void DFRobot_MY9221SS::send(uint16_t* buf)//向芯片发送所有数据
   {
     senddata(buf[i]);
   }
-  // Serial.print("\n");
   latch();//锁存
   return;
 }

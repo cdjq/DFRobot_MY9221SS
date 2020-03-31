@@ -7,9 +7,9 @@
  * @author [YeHangYu](hangyu.ye@dfrobot.com)
  * @version  V0.1
  * @date  2020-03-20
- * @url https://github.com/DFRobot/DFRobot_G
+ * @url https://github.com/DFRobot/DFRobot_MY9221SS
  */
-#include <DFRobot_LedDriver.h>
+#include <DFRobot_MY9221SS.h>
 
 //自定义通信引脚
 /*FireBeetle-M0*/
