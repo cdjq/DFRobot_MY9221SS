@@ -78,13 +78,13 @@ micro:bit        |      √       |              |             |
 
 ## History
 
-- Data 2019-8-19
+- Data 2020-3-31
 - Version V0.1
 
 
 ## Credits
 
-Written by(yufeng.luo@dfrobot.com), 2019. (Welcome to our [website](https://www.dfrobot.com/))
+Written by(hangyu.ye@dfrobot.com), 2020. (Welcome to our [website](https://www.dfrobot.com/))
 
 
 

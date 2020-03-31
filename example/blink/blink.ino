@@ -1,5 +1,5 @@
 /*!
- * @file setAllLED.ino
+ * @file blink.ino
  * @brief 用RGB值设置LED灯的颜色
  * @n 本示例支持的主板有ESP8266、FireBeetle-M0,MAGE2560，UNO、ESP32、Leonardo 、Mega2560
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
