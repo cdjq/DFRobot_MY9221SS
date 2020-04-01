@@ -13,10 +13,10 @@ DFRobot_MY9221SS	KEYWORD1
 #######################################
               
 begin	KEYWORD2
-sendcmd	KEYWORD2
-senddata	KEYWORD2
+sendCmd	KEYWORD2
+sendData	KEYWORD2
 latch	KEYWORD2
-send	KEYWORD2
+write	KEYWORD2
               
 #######################################
 # Constants (LITERAL1)

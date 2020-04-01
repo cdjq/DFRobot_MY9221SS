@@ -1,5 +1,7 @@
-# DFRobot_MY9221SS  LED驱动库
-DFRobot_MY9221SS是使用MY9221SS芯片的LED驱动库，芯片可承受最大输出电压17伏特以支持多颗LED串联，解决了现在很多交互场景需要用到灯带或LED均为12V，使用5V/3.3V类主控不能驱动的问题。该LED驱动可分别驱动4路大功率RGBLed，可级联   <br>
+# DFRobot_MY9221SS  RGB驱动库
+DFRobot_MY9221SS是基于MY9221SS芯片的RGB驱动库，其芯片最大可承受17V电压，可以驱动12V电源线和RGB引脚的LED灯，通过R,G,B三个引脚设置灯的红绿蓝三基色及其所有混色。
+该驱动支持多颗大功率灯串联，而且驱动可级联，每个驱动可分别控制4路LED灯。
+该库也可以用于驱动12路单色灯，分别控制每路灯的亮度。  <br>
 
 
 
@@ -18,8 +20,8 @@ DFRobot_MY9221SS是使用MY9221SS芯片的LED驱动库，芯片可承受最大�
 
 ## Summary
 
-* 控制4个带RGB和电源引脚的LED灯，最高可承受17V <br>
-* 控制LED灯闪烁、亮度和改变色. <br>
+* 控制12路单色LED灯的亮度 <br>
+* 分别控制4路带RGB和12V电源引脚的LED灯闪烁、亮度和改变色. <br>
 
 ## Installation
 
@@ -30,27 +32,27 @@ To use this library, first download the library file, paste it into the \Arduino
 ```C++
   /*!
    *@brief 构造函数
-   *@param pinClock 时钟引脚
-   *@param pinData  数据引脚
    */
-  DFRobot_MY9221SS(uint32_t pinClock, uint32_t pinData);
+  DFRobot_MY9221SS();
   
   /*!
    *@brief 初始化
+   *@param pinClock 时钟引脚
+   *@param pinData  数据引脚
    */
-  void begin(void);
+  void begin(/*pinClock=*/CLK_PIN, /*pinData=*/DATA_PIN);
 
   /*!
    *@brief 发送16位CMD命令
    *@param bits 16位数据
    */
-  void sendcmd(uint16_t bits);  
+  void sendCmd(uint16_t bits);  
 
   /*!
    *@brief 每次调用发送16位数据
    *@param bits 16位数据
    */
-  void senddata(uint16_t bits); 
+  void sendData(uint16_t bits); 
 
   /*!
    *@brief 内部栓锁的控制
@@ -61,7 +63,7 @@ To use this library, first download the library file, paste it into the \Arduino
    *@brief 发送全部208位数据
    *@param buf 指向192bit灰阶数据的指针，从控制引脚A3的16bit数据开始发送
    */
-  void send(uint16_t* buf); 
+  void write(uint16_t* buf); 
 ```
 
 ## Compatibility

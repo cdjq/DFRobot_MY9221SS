@@ -13,11 +13,8 @@
 #ifndef _DFROBOT_MY9221SS_H
 #define _DFRobot_MY9221SS_H
 
-#if (ARDUINO >= 100)
 #include <Arduino.h>
-#else
-#include <WProgram.h>
-#endif
+
 
 #define ENABLE_DBG   0
 #ifdef ENABLE_DBG
@@ -83,53 +80,77 @@ public:
     uint8_t   osc:1; /*!< 0 : internal oscillator (8.6MHz) (internal GCK source) 1 : external clock from GCKI pin (external GCK source) */
     uint8_t   pol:1; /*!< 0 : work as LED driver 1 : work as MY-PWM/APDM generator */
     uint8_t   cntset:1; /*!< 0 : free running mode 1 : counter reset mode (Only usable when osc = “1”) */
-    uint8_t   onest:1; /*!< 0 : frame cycle repeat mode 1 : frame cycle One-shot mode (Only usable when 
-cntset = “1”) */
+    uint8_t   onest:1; /*!< 0 : frame cycle repeat mode 1 : frame cycle One-shot mode (Only usable when cntset = “1”) */
   } __attribute__ ((packed)) sMode_t;
 
   
 public:
-  /*!
+  /**
    *@brief 构造函数
+   */
+  DFRobot_MY9221SS(void);
+  
+  /**
+   *@brief 初始化
    *@param pinClock 时钟引脚
    *@param pinData  数据引脚
    */
-  DFRobot_MY9221SS(uint32_t pinClock, uint32_t pinData);
-  
-  /*!
-   *@brief 初始化
-   */
-  void begin(void);
+  void begin(uint32_t pinClock, uint32_t pinData);
 
-  /*!
+  /**
    *@brief 发送16位CMD命令
    *@param bits 16位数据
    */
-  void sendcmd(uint16_t bits);
+  void sendCmd(uint16_t bits);
 
-  /*!
+  /**
    *@brief 每次调用发送16位数据
    *@param bits 16位数据
    */
-  void senddata(uint16_t bits);
+  void sendData(uint16_t bits);
 
-  /*!
-   *@brief 内部栓锁的控制
+  /**
+   *@brief 锁存信号
    */
   void latch(void);   
 
-  /*!
+  /**
    *@brief 发送全部208位数据
    *@param buf 指向192bit灰阶数据的指针，从控制引脚A3的16bit数据开始发送
    */
-  void send(uint16_t* buf);
+  void write(uint16_t* buf);
+
+  /**
+   * @brief 设置所有灯的RGB颜色，这里设置为白色，最亮
+   * @param R     设置RGB红色分量，硬件应连接引脚B，取值范围0~255
+   * @param G     设置RGB绿色分量，硬件应连接引脚C，取值范围0~255
+   * @param B     设置RGB蓝色分量，硬件应连接引脚A，取值范围0~255
+  */
+  void setAllLed(uint16_t R, uint16_t G, uint16_t B);
+
+  /**
+   * @brief 设置某个灯的RGB颜色，4号灯对应引脚A3B3C3  
+   * @param ledNo 设置的灯的编号，取值1~4
+   * @param R     设置RGB红色分量，硬件应连接引脚B，取值范围0~255
+   * @param G     设置RGB绿色分量，硬件应连接引脚C，取值范围0~255
+   * @param B     设置RGB蓝色分量，硬件应连接引脚A，取值范围0~255
+  */
+  void setLed(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B);
+
+  /**
+   * @brief 设置某个灯的颜色和亮度，4号灯对应引脚A3B3C3
+   * @param ledNo         设置的灯的编号，取值范围1~4
+   * @param color         用宏定义控制led灯，格式是RGB565
+   * @param brightness    亮度控制，取值范围0~255
+  */
+  void setLedColor(uint8_t ledNo, uint16_t color, uint8_t brightness);
 
 private:
+  void setDefaultMode(void);//设置默认模式
+  
+private:
+  uint16_t _mode;
   uint32_t _pinClock;
   uint32_t _pinData;
-  sMode_t  mode;
-  uint16_t _mode;
-private:
-  void switchMode(void);//设置模式
 };
 #endif

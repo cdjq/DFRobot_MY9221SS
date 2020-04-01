@@ -15,24 +15,22 @@
 //自定义通信引脚
 /*FireBeetle-M0*/
 #if defined ARDUINO_SAM_ZERO
-#define MY9221SS_D   7
-#define MY9221SS_DCK 5
+#define DATA_PIN   7
+#define CLK_PIN    5
 /*ESP32 and ESP8266*/
 #elif defined(ESP32) || defined(ESP8266)
-#define MY9221SS_D   D3
-#define MY9221SS_DCK D4
+#define DATA_PIN   D3
+#define CLK_PIN    D4
 /*AVR系列主板*/
 #else
-#define MY9221SS_D   2
-#define MY9221SS_DCK 3
+#define DATA_PIN   2
+#define CLK_PIN    3
 #endif
 
 /**
- * @brief Constructor  芯片通信的构造函数
- * @param pinClock 时钟引脚
- * @param pinData  数据引脚
+ * @brief Constructor  LED驱动构造函数
  */
-DFRobot_MY9221SS rgbdriver(/*pinClock=*/MY9221SS_DCK, /*pinData=*/MY9221SS_D);
+DFRobot_MY9221SS rgbdriver();
 
 /*
  *可供用户选择的宏定义颜色
@@ -46,13 +44,16 @@ DFRobot_MY9221SS rgbdriver(/*pinClock=*/MY9221SS_DCK, /*pinData=*/MY9221SS_D);
  *用到的宏定义
  *LED_FULL_BRIGHTNESS 0xff 最高亮度
  *LED_TURN_OFF        0    不亮
- *LED_BIN_COUNT       12   引脚数
  */
 void setup() {
   //初始化串口
   Serial.begin(115200);
-  //初始化LED灯驱动
-  rgbdriver.begin();
+  /**
+  * @brief  初始化LED驱动
+  * @param pinClock 时钟引脚
+  * @param pinData  数据引脚
+  */
+  rgbdriver.begin(/*pinClock=*/CLK_PIN, /*pinData=*/DATA_PIN);
 }
 
 void loop()
@@ -63,48 +64,11 @@ void loop()
    * @param color         用宏定义控制led灯，格式是RGB565
    * @param brightness    亮度控制，取值范围0~255
   */
-  setLed(/*ledNo=*/4,/*color=*/COLOR_RGB565_GREEN,/*brightness=*/LED_FULL_BRIGHTNESS);
+  setLedColor(/*ledNo=*/4,/*color=*/COLOR_RGB565_GREEN,/*brightness=*/LED_FULL_BRIGHTNESS);
   delay(1000);
-  setLed(/*ledNo=*/4,/*color=*/COLOR_RGB565_RED,/*brightness=*/LED_FULL_BRIGHTNESS);
+  setLedColor(/*ledNo=*/4,/*color=*/COLOR_RGB565_RED,/*brightness=*/LED_FULL_BRIGHTNESS);
   delay(1000);
-  setLed(/*ledNo=*/4,/*color=*/COLOR_RGB565_BLUE,/*brightness=*/LED_FULL_BRIGHTNESS);
+  setLedColor(/*ledNo=*/4,/*color=*/COLOR_RGB565_BLUE,/*brightness=*/LED_FULL_BRIGHTNESS);
   delay(1000);
 }
 
-void setLed(uint8_t ledNo, uint16_t color, uint8_t brightness)
-{
-  uint16_t  led[LED_BIN_COUNT];
-  uint16_t R,G,B;
-  //变为RGB888
-  R = (color >> 11) * 8 * brightness/0xff;
-  G = ((color >> 6) & 31) * 8 * brightness/0xff;
-  B = (color & 31) * 8 * brightness/0xff;
-  ledNo = 5 - ledNo;
-  if(ledNo <= 4 || ledNo >= 1)
-  {
-    for(uint8_t i = 0; i < LED_BIN_COUNT; i++)
-    {
-      if(i == ledNo*3-3)
-      {
-        led[i] = B;
-      }
-      else if(i == ledNo*3-2)
-      {
-        led[i] = R;
-      }
-      else if(i == ledNo*3-1)
-      {
-        led[i] = G;
-      }
-      else
-      {
-        led[i] = LED_TURN_OFF;
-      }
-    }
-    rgbdriver.send(led);//向芯片发送数据，12个引脚，每个16bit
-  }
-  else
-  {
-    Serial.println("ledNo error");
-  }
-}
