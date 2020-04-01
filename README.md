@@ -18,9 +18,8 @@ DFRobot_MY9221SS是使用MY9221SS芯片的LED驱动库，芯片可承受最大�
 
 ## Summary
 
-* Read the time the program was last compiled. <br>
-* Set a alarm clock to trigger at a specified time. <br>
-* Measure ambient temperature. <br>
+* 控制4个带RGB和电源引脚的LED灯，最高可承受17V <br>
+* 控制LED灯闪烁、亮度和改变色. <br>
 
 ## Installation
 

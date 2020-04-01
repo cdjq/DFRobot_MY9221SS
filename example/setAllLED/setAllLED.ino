@@ -90,11 +90,3 @@ void setAllLed(uint16_t R, uint16_t G, uint16_t B)
   }
   rgbdriver.send(led);//向芯片发送数据，12个引脚，每个16bit，共208bit
 }
-
-
-
-
-
-
-
-  

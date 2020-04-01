@@ -22,16 +22,7 @@ void DFRobot_MY9221SS::begin(void)//初始化
   pinMode(_pinClock, OUTPUT);
   pinMode(_pinData, OUTPUT);
   //设置模式
-  mode.temp = 0;
-  mode.hspd = 1;//输出电流设置为慢速可能会出现问题
-  mode.bs = 0;
-  mode.gck = 0;
-  mode.sep = 0;
-  mode.osc = 0;
-  mode.pol = 0;
-  mode.cntset = 0;
-  mode.onest = 0;
-  _mode = *((uint16_t*)&mode);
+  switchMode();
 }
 void DFRobot_MY9221SS::sendcmd(uint16_t bits)//发送16位CMD命令
 {
@@ -52,6 +43,20 @@ void DFRobot_MY9221SS::senddata(uint16_t bits)//每次调用发送16位数据
     clk = 1-clk;
     bits <<= 1;
   }
+}
+
+void DFRobot_MY9221SS::switchMode(void)//模式设置
+{
+  mode.temp = 0;
+  mode.hspd = 1;//输出电流设置为慢速可能会出现问题
+  mode.bs = 0;
+  mode.gck = 0;
+  mode.sep = 0;
+  mode.osc = 0;
+  mode.pol = 0;
+  mode.cntset = 0;
+  mode.onest = 0;
+  _mode = *((uint16_t*)&mode);
 }
 
 void DFRobot_MY9221SS::latch()//内部栓锁的控制
@@ -85,4 +90,3 @@ void DFRobot_MY9221SS::send(uint16_t* buf)//向芯片发送所有数据
   latch();//锁存
   return;
 }
-
