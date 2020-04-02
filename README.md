@@ -1,7 +1,8 @@
 # DFRobot_MY9221SS  RGB驱动库
-DFRobot_MY9221SS是基于MY9221SS芯片的RGB驱动库，其芯片最大可承受17V电压，可以驱动12V电源线和RGB引脚的LED灯，通过R,G,B三个引脚设置灯的红绿蓝三基色及其所有混色。
-该驱动支持多颗大功率灯串联，而且驱动可级联，每个驱动可分别控制4路LED灯。
-该库也可以用于驱动12路单色灯，分别控制每路灯的亮度。  <br>
+DFRobot_MY9221SS是基于MY9221SS芯片的RGB驱动库，其芯片最大可承受17V电压，可以驱动带12V电源线和RGB引脚的LED灯，通过PWM调节灯的红绿蓝三基色的亮度从而组成混色。
+该驱动支持级联，可以将多个驱动级联同时进行相同的工作。
+每个驱动可分别控制4颗大功率LED灯，每颗LED灯可串联多颗。
+该库也可以用于驱动12颗单色灯，通过PWM可分别控制调节每一颗灯的亮度。  <br>
 
 
 
@@ -37,10 +38,10 @@ To use this library, first download the library file, paste it into the \Arduino
   
   /*!
    *@brief 初始化
-   *@param pinClock 时钟引脚
-   *@param pinData  数据引脚
+   *@param clockPin 时钟引脚
+   *@param dataPin  数据引脚
    */
-  void begin(/*pinClock=*/CLK_PIN, /*pinData=*/DATA_PIN);
+  void begin(/*clockPin=*/CLK_PIN, /*dataPin=*/DATA_PIN);
 
   /*!
    *@brief 发送16位CMD命令

@@ -24,38 +24,31 @@
 #endif
 
 
-#define LED_BIN_COUNT   12            //芯片的RGB引脚总数
+#define LED_PIN_COUNT   12            //芯片的RGB引脚总数
 
 /*
 *亮度调节
-*00000000 暗
-*00000011 变亮
-*........
-*11111111 最亮
+*0是熄灭，255是最亮，数值越大灯会越亮
 */
 #define LED_TURN_OFF           0     //关闭LED灯
 #define LED_FULL_BRIGHTNESS    0xff  //打开LED灯（最亮）
 
-#define  COLOR_RGB565_BLACK     0x0000      // 黑色    
-#define  COLOR_RGB565_NAVY      0x000F      // 深蓝色  
-#define  COLOR_RGB565_DGREEN    0x03E0      // 深绿色  
-#define  COLOR_RGB565_DCYAN     0x03EF      // 深青色  
-#define  COLOR_RGB565_PURPLE    0x780F      // 紫色  
-#define  COLOR_RGB565_MAROON    0x7800      // 深红色      
-#define  COLOR_RGB565_OLIVE     0x7BE0      // 橄榄绿      
-#define  COLOR_RGB565_LGRAY     0xC618      // 灰白色
-#define  COLOR_RGB565_DGRAY     0x7BEF      // 深灰色      
-#define  COLOR_RGB565_BLUE      0x001F      // 蓝色    
-#define  COLOR_RGB565_GREEN     0x07E0      // 绿色 
-#define  COLOR_RGB565_CYAN      0x07FF      // 青色  
-#define  COLOR_RGB565_RED       0xF800      // 红色       
-#define  COLOR_RGB565_MAGENTA   0xF81F      // 品红    
-#define  COLOR_RGB565_YELLOW    0xFFE0      // 黄色
-#define  COLOR_RGB565_WHITE     0xFFFF      // 白色
-
 
 class DFRobot_MY9221SS
 {
+  //RGB Driver的RGB引脚的宏定义
+  #define  C0  0
+  #define  B0  1
+  #define  A0  2
+  #define  C1  3
+  #define  B1  4
+  #define  A1  5
+  #define  C2  6
+  #define  B2  7
+  #define  A2  6
+  #define  C3  9
+  #define  B3  10
+  #define  A3  11
 public:
   /*
   *设置芯片模式的CMD数据格式
@@ -91,10 +84,10 @@ public:
 
   /**
    *@brief 初始化
-   *@param pinClock 时钟引脚
-   *@param pinData  数据引脚
+   *@param clockPin 时钟引脚
+   *@param dataPin  数据引脚
    */
-  void begin(uint32_t pinClock, uint32_t pinData);
+  void begin(uint32_t clockPin, uint32_t dataPin);
 
   /**
    *@brief 发送16位CMD命令
@@ -109,9 +102,18 @@ public:
   void sendData(uint16_t bits);
 
   /**
-   *@brief 锁存信号
+   *@brief 设置模式
+   *@param temp 保留位元
+   *@param hspd 输出电流反应速度选择
+   *@param bs  灰阶选择
+   *@param gck 内置灰阶时钟频率选择
+   *@param sep 输出电流打散与不打散选择
+   *@param osc 灰阶时钟频率来源选择
+   *@param pol 输出电流极性选择
+   *@param cntset 自动更换画面模式或强制更换画面模式选择
+   *@param onest 画面重复显示或只亮一次选择
    */
-  void latch(void);
+  void setMode(uint8_t temp=0, uint8_t hspd=1, uint8_t bs=0, uint8_t gck=0, uint8_t sep=0, uint8_t osc=0, uint8_t pol=0, uint8_t cntset=0, uint8_t onest=0);
 
   /**
    *@brief 发送全部208位数据
@@ -121,20 +123,12 @@ public:
 
   /**
    * @brief 设置某个灯的RGB颜色，4号灯对应引脚A3B3C3
-   * @param ledNo 设置的灯的编号，取值1~4
+   * @param ledNo 设置的灯的编号，一共四路/颗灯，取值1~4
    * @param R     设置RGB红色分量，硬件应连接引脚B，取值范围0~255
    * @param G     设置RGB绿色分量，硬件应连接引脚C，取值范围0~255
    * @param B     设置RGB蓝色分量，硬件应连接引脚A，取值范围0~255
   */
   void setLed(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B);
-
-  /**
-   * @brief 设置某个灯的颜色和亮度，4号灯对应引脚A3B3C3
-   * @param ledNo         设置的灯的编号，取值范围1~4
-   * @param color         用宏定义控制led灯，格式是RGB565
-   * @param brightness    亮度控制，取值范围0~255
-  */
-  void setLedColor(uint8_t ledNo, uint16_t color, uint8_t brightness);
 
   /**
    * @brief 设置所有灯的RGB颜色
@@ -145,17 +139,29 @@ public:
   void setAllLed(uint16_t R, uint16_t G, uint16_t B);
 
   /**
-   * @brief 所有灯的RGB颜色随机
+   * @brief 点亮所有灯，RGB颜色随机
   */
   void autoColorChange(void);
 
+  /**
+   * @brief 设置单个引脚的亮度，可用于调节单色灯的亮度
+   * @param pinNo        设置的单个引脚的编号，使用引脚名即可，引脚名的宏定义与实物完全一致
+   * @param brightness   设置亮度，取值范围0~255
+  */
+  void setSinglePin(uint8_t pinNo, uint16_t brightness);
 
-private:
-  void setDefaultMode(void);//设置默认模式
+  /**
+   * @brief 改用12位二进制，指定引脚并控制对应引脚亮度
+   * @param bits        用二进制指定对应引脚，12位二进制从左往右依次对应引脚C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3，范围从0到0xfff
+   * @param brightness   设置亮度，取值范围0~255
+  */
+  void setPins(uint16_t bits, uint16_t brightness);
+
+
 
 private:
   uint16_t _mode;
-  uint32_t _pinClock;
-  uint32_t _pinData;
+  uint32_t _clockPin;
+  uint32_t _dataPin;
 };
 #endif

@@ -15,20 +15,20 @@ DFRobot_MY9221SS::DFRobot_MY9221SS(void)
 {
 
 }
-void DFRobot_MY9221SS::begin(uint32_t pinClock, uint32_t pinData)//初始化
+void DFRobot_MY9221SS::begin(uint32_t clockPin, uint32_t dataPin)//初始化
 {
-  _pinData = pinData;
-  _pinClock = pinClock;
-  pinMode(_pinClock, OUTPUT);
-  pinMode(_pinData, OUTPUT);
+  _dataPin = dataPin;
+  _clockPin = clockPin;
+  pinMode(_clockPin, OUTPUT);
+  pinMode(_dataPin, OUTPUT);
   //设置模式
-  setDefaultMode();
+  setMode();
 }
 void DFRobot_MY9221SS::sendCmd(uint16_t bits)//发送16位CMD命令
 {
   for (uint8_t i = 0, clk = 1; i < 16; i++) {
-    digitalWrite(_pinData, bits & 0x8000 ? HIGH : LOW);//数据发送
-    digitalWrite(_pinClock, clk);//时钟上升沿下降沿，数据有效
+    digitalWrite(_dataPin, bits & 0x8000 ? HIGH : LOW);//数据发送
+    digitalWrite(_clockPin, clk);//时钟上升沿下降沿，数据有效
     clk = 1-clk;
     bits <<= 1;
   }
@@ -36,48 +36,29 @@ void DFRobot_MY9221SS::sendCmd(uint16_t bits)//发送16位CMD命令
 void DFRobot_MY9221SS::sendData(uint16_t bits)//每次调用发送16位数据
 {
   for (uint8_t i = 0, clk = 1; i < 16; i++) {
-    digitalWrite(_pinData, bits & 0x8000 ? HIGH : LOW);//数据发送
-    digitalWrite(_pinClock, clk);//时钟上升沿下降沿，数据有效
+    digitalWrite(_dataPin, bits & 0x8000 ? HIGH : LOW);//数据发送
+    digitalWrite(_clockPin, clk);//时钟上升沿下降沿，数据有效
     clk = 1-clk;
     bits <<= 1;
   }
+  
 }
 
-void DFRobot_MY9221SS::setDefaultMode(void)//模式设置
+void DFRobot_MY9221SS::setMode(uint8_t temp, uint8_t hspd, uint8_t bs, uint8_t gck, uint8_t sep, uint8_t osc, uint8_t pol, uint8_t cntset, uint8_t onest)//模式设置
 {
   sMode_t  mode;
-  mode.temp = 0;
-  mode.hspd = 1;//输出电流设置为慢速可能会出现问题
-  mode.bs = 0;
-  mode.gck = 0;
-  mode.sep = 0;
-  mode.osc = 0;
-  mode.pol = 0;
-  mode.cntset = 0;
-  mode.onest = 0;
+  mode.temp = temp;
+  mode.hspd = hspd;//输出电流设置为慢速可能会出现问题
+  mode.bs = bs;
+  mode.gck = gck;
+  mode.sep = sep;
+  mode.osc = osc;
+  mode.pol = pol;
+  mode.cntset = cntset;
+  mode.onest = onest;
   _mode = *((uint16_t*)&mode);
 }
 
-void DFRobot_MY9221SS::latch()//锁存信号
-{
-  digitalWrite(_pinData, LOW);
-  digitalWrite(_pinClock, HIGH);
-  digitalWrite(_pinClock, LOW);
-  digitalWrite(_pinClock, HIGH);
-  digitalWrite(_pinClock, LOW);
-  delayMicroseconds(240);
-  digitalWrite(_pinData, HIGH);
-  digitalWrite(_pinData, LOW);
-  digitalWrite(_pinData, HIGH);
-  digitalWrite(_pinData, LOW);
-  digitalWrite(_pinData, HIGH);
-  digitalWrite(_pinData, LOW);
-  digitalWrite(_pinData, HIGH);
-  digitalWrite(_pinData, LOW);
-  delayMicroseconds(1);
-  digitalWrite(_pinClock, HIGH);
-  digitalWrite(_pinClock, LOW);
-}
 
 void DFRobot_MY9221SS::write(uint16_t* buf)//向芯片发送所有数据
 {
@@ -85,43 +66,33 @@ void DFRobot_MY9221SS::write(uint16_t* buf)//向芯片发送所有数据
   for (uint8_t i = 0; i < 12; i++) { //发送灰阶数据，从A3引脚的buf开始发
     sendData(buf[i]);
   }
-  latch();//锁存
+  //所有数据发送完后发送锁存信号，灰阶资料和命令锁存后自动发给驱动器使LED灯工作
+  digitalWrite(_dataPin, LOW);
+  digitalWrite(_clockPin, HIGH);
+  digitalWrite(_clockPin, LOW);
+  digitalWrite(_clockPin, HIGH);
+  digitalWrite(_clockPin, LOW);
+  delayMicroseconds(240);
+  digitalWrite(_dataPin, HIGH);
+  digitalWrite(_dataPin, LOW);
+  digitalWrite(_dataPin, HIGH);
+  digitalWrite(_dataPin, LOW);
+  digitalWrite(_dataPin, HIGH);
+  digitalWrite(_dataPin, LOW);
+  digitalWrite(_dataPin, HIGH);
+  digitalWrite(_dataPin, LOW);
+  delayMicroseconds(1);
+  digitalWrite(_clockPin, HIGH);
+  digitalWrite(_clockPin, LOW);
   return;
-}
-
-void DFRobot_MY9221SS::setLedColor(uint8_t ledNo, uint16_t color, uint8_t brightness)//用RGB565和亮度值来设置某一个RGB灯的颜色
-{
-  uint16_t  buf[LED_BIN_COUNT];
-  uint16_t R,G,B;
-  //变为RGB888
-  R = (color >> 11) * 8 * brightness/0xff;
-  G = ((color >> 6) & 31) * 8 * brightness/0xff;
-  B = (color & 31) * 8 * brightness/0xff;
-  ledNo = 5 - ledNo;
-  if(ledNo <= 4 || ledNo >= 1) {
-    for(uint8_t i = 0; i < LED_BIN_COUNT; i++) {
-      if(i == ledNo*3-3) {
-        buf[i] = B;
-      } else if(i == ledNo*3-2) {
-        buf[i] = R;
-      } else if(i == ledNo*3-1) {
-        buf[i] = G;
-      } else {
-        buf[i] = LED_TURN_OFF;
-      }
-    }
-    write(buf);//向芯片发送数据，12个引脚，每个16bit
-  } else {
-    Serial.println("ledNo error");
-  }
 }
 
 void DFRobot_MY9221SS::setLed(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B)//用RGB888设置某一个RGB灯的颜色
 {
-  uint16_t  buf[LED_BIN_COUNT];
+  uint16_t  buf[LED_PIN_COUNT];
   ledNo = 5 - ledNo;
   if(ledNo <= 4 || ledNo >= 1) {
-    for(uint8_t i = 0; i < LED_BIN_COUNT; i++) {
+    for(uint8_t i = 0; i < LED_PIN_COUNT; i++) {
       if(i == ledNo*3-3) {
         buf[i] = G ;
       } else if(i == ledNo*3-2) {
@@ -132,7 +103,7 @@ void DFRobot_MY9221SS::setLed(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B)
         buf[i] = LED_TURN_OFF;
       }
     }
-    write(buf);//向芯片发送数据，12个引脚，每个16bit，共208bit
+    write(buf);//向芯片写入数据，12个引脚，每个16bit
   } else {
     Serial.println("ledNo error");
   }
@@ -140,8 +111,8 @@ void DFRobot_MY9221SS::setLed(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B)
 
 void DFRobot_MY9221SS::setAllLed(uint16_t R, uint16_t G, uint16_t B)//用RGB888设置所有RGB灯的颜色
 {
-  uint16_t  buf[LED_BIN_COUNT];
-  for(uint8_t i = 0; i < LED_BIN_COUNT; i++) {
+  uint16_t  buf[LED_PIN_COUNT];
+  for(uint8_t i = 0; i < LED_PIN_COUNT; i++) {
     if(i%3 == 0) {
       buf[i] = G ;
     } else if(i%3 == 1) {
@@ -150,25 +121,55 @@ void DFRobot_MY9221SS::setAllLed(uint16_t R, uint16_t G, uint16_t B)//用RGB888�
       buf[i] = B ;
     }
   }
-  write(buf);//向芯片发送数据，12个引脚，每个16bit，共208bit
+  write(buf);//向芯片写入数据，12个引脚，每个16bit
 }
 
-void DFRobot_MY9221SS::autoColorChange(void)//所有RGB灯自动改变颜色
+void DFRobot_MY9221SS::autoColorChange(void)//所有RGB灯，随机颜色
 {
-  uint16_t  buf[LED_BIN_COUNT];
-  uint16_t R = 0xff; 
-  uint16_t G = 0xff; 
-  uint16_t B = 0xff; 
-  uint8_t r = (rand()%255);
-  for(uint8_t i = 0; i < LED_BIN_COUNT; i++) {
+  uint16_t  buf[LED_PIN_COUNT];
+  uint16_t R = rand()%255; 
+  uint16_t G = rand()%255; 
+  uint16_t B = 255 - (R + G)/2;
+  for(uint8_t i = 0; i < LED_PIN_COUNT; i++) {
     if(i%3 == 0) {
-      buf[i] = G / (r - 150) ;
+      buf[i] = G ;
     } else if(i%3 == 1) {
-      buf[i] = R / (r - 80) ;
+      buf[i] = R ;
     } else if(i%3 == 2) {
-      buf[i] = B / (r - 0) ;
+      buf[i] = B ;
     }
   }
-  write(buf);//向芯片发送数据，12个引脚，每个16bit，共208bit
+  write(buf);//向芯片写入数据，12个引脚，每个16bit
 }
 
+void DFRobot_MY9221SS::setSinglePin(uint8_t pinNo, uint16_t brightness)//设置单个引脚的亮度
+{
+  uint16_t  buf[LED_PIN_COUNT];
+  pinNo = 11 - pinNo;
+  if(pinNo <= 11 || pinNo >= 0) {
+    for(uint8_t i = 0; i < LED_PIN_COUNT; i++) {
+      if(i == pinNo) {
+        buf[i] = brightness ;
+      } else {
+        buf[i] = LED_TURN_OFF;
+      }
+    }
+    write(buf);//向芯片写入数据，12个引脚，每个16bit
+  } else {
+    Serial.println("pinNo error");
+  }
+}
+
+void DFRobot_MY9221SS::setPins(uint16_t bits, uint16_t brightness)//改用12位二进制指定引脚，控制对应引脚亮度，最高位是C0，最低位是A11
+{
+  uint16_t  buf[LED_PIN_COUNT];
+  for(uint8_t i = 0; i < LED_PIN_COUNT; i++) {
+    if(bits & 0x0001) {
+      buf[i] = brightness;
+    } else {
+      buf[i] = LED_TURN_OFF;
+    }
+    bits>>=1;
+  }
+  write(buf);//向芯片写入数据，12个引脚，每个16bit
+}

@@ -1,7 +1,7 @@
 /*!
  * @file setAllLED.ino
- * @brief 用RGB值设置LED灯的颜色
- * @n 本示例支持的主板有ESP8266、FireBeetle-M0,MAGE2560，UNO、ESP32、Leonardo 、Mega2560
+ * @brief 用RGB值设置所有LED灯的颜色，点亮所有灯，BRG三基色分别对应引脚A0~A3、B0~B3、C0~C3
+ * @n 本示例支持的主板有ESP8266、FireBeetle-M0、UNO、ESP32、Leonardo 、Mega2560
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
  * @author [YeHangYu](hangyu.ye@dfrobot.com)
@@ -29,26 +29,22 @@
 /**
  * @brief Constructor  LED驱动构造函数
  */
-DFRobot_MY9221SS rgbdriver;
+DFRobot_MY9221SS rgbDriver;
 
 /*
- *用到的宏定义
+ *可用的宏定义
  *LED_FULL_BRIGHTNESS 0xff 最高亮度
  *LED_TURN_OFF        0    不亮
  */
 void setup() {
   //初始化串口
   Serial.begin(115200);
-  while (!Serial)
-  {
-    ; //等待串口连接
-  }
   /**
   * @brief  初始化LED驱动
-  * @param pinClock 时钟引脚
-  * @param pinData  数据引脚
+  * @param clockPin 时钟引脚
+  * @param dataPin  数据引脚
   */
-  rgbdriver.begin(/*pinClock=*/CLK_PIN, /*pinData=*/DATA_PIN);
+  rgbDriver.begin(/*clockPin=*/CLK_PIN, /*dataPin=*/DATA_PIN);
 }
 
 void loop() {
@@ -58,15 +54,15 @@ void loop() {
    * @param G     设置RGB绿色分量，硬件应连接引脚C，取值范围0~255
    * @param B     设置RGB蓝色分量，硬件应连接引脚A，取值范围0~255
   */
-  rgbdriver.setAllLed(/*R=*/LED_FULL_BRIGHTNESS,/*G=*/LED_FULL_BRIGHTNESS,/*B=*/LED_FULL_BRIGHTNESS);
+  rgbDriver.setAllLed(/*R=*/LED_FULL_BRIGHTNESS,/*G=*/LED_FULL_BRIGHTNESS,/*B=*/LED_FULL_BRIGHTNESS);
   delay(1000);
   
   //显示最低亮度的红绿蓝
-  rgbdriver.setAllLed(/*R=*/1,/*G=*/0,/*B=*/0);
+  rgbDriver.setAllLed(/*R=*/1,/*G=*/0,/*B=*/0);
   delay(1000);
-  rgbdriver.setAllLed(/*R=*/0,/*G=*/1,/*B=*/0);
+  rgbDriver.setAllLed(/*R=*/0,/*G=*/1,/*B=*/0);
   delay(1000);
-  rgbdriver.setAllLed(/*R=*/0,/*G=*/0,/*B=*/1);
+  rgbDriver.setAllLed(/*R=*/0,/*G=*/0,/*B=*/1);
   delay(1000);
 }
 

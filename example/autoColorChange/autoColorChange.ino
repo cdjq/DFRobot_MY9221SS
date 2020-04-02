@@ -1,7 +1,7 @@
 /*!
  * @file blink.ino
  * @brief 通过RGB设置红绿蓝三基色让LED灯闪烁
- * @n 本示例支持的主板有ESP8266、FireBeetle-M0,MAGE2560，UNO、ESP32、Leonardo 、Mega2560
+ * @n 本示例支持的主板有ESP8266、FireBeetle-M0、UNO、ESP32、Leonardo 、Mega2560
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
  * @author [YeHangYu](hangyu.ye@dfrobot.com)
@@ -29,32 +29,28 @@
 /**
  * @brief Constructor LED驱动构造函数
  */
-DFRobot_MY9221SS rgbdriver; 
+DFRobot_MY9221SS rgbDriver; 
 
 /*
- *用到的宏定义
+ *可用的宏定义
  *LED_FULL_BRIGHTNESS 0xff 最高亮度
  *LED_TURN_OFF        0    不亮
  */
 void setup() {
   //初始化串口
   Serial.begin(115200);
-  while (!Serial)
-  {
-    ; //等待串口连接
-  }
   /**
   * @brief  初始化LED驱动
-  * @param pinClock 时钟引脚
-  * @param pinData  数据引脚
+  * @param clockPin 时钟引脚
+  * @param dataPin  数据引脚
   */
-  rgbdriver.begin(/*pinClock=*/CLK_PIN, /*pinData=*/DATA_PIN);
+  rgbDriver.begin(/*clockPin=*/CLK_PIN, /*dataPin=*/DATA_PIN);
 }
 
 void loop() {
   /**
    * @brief 所有灯随机改变颜色
   */
-  rgbdriver.autoColorChange();
-  delay(1000);
+  rgbDriver.autoColorChange();
+  delay(500);
 }

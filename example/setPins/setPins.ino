@@ -1,6 +1,6 @@
 /*!
- * @file setLedRgb888.ino
- * @brief 用3个八位的RGB设置灯的颜色，点亮4号灯，BRG三基色分别对应引脚A3、B3、C3
+ * @file setSinglePin.ino
+ * @brief 通过设置A3引脚的亮度，点亮A3引脚上的灯，需将单色LED灯的负极接A3引脚，电源线接上合适的电压源
  * @n 本示例支持的主板有ESP8266、FireBeetle-M0、UNO、ESP32、Leonardo 、Mega2560
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
@@ -27,19 +27,20 @@
 #endif
 
 /**
- * @brief Constructor  LED驱动构造函数
+ * @brief Constructor LED驱动构造函数
  */
-DFRobot_MY9221SS rgbDriver;
+DFRobot_MY9221SS rgbDriver; 
 
 /*
  *可用的宏定义
  *LED_FULL_BRIGHTNESS 0xff 最高亮度
  *LED_TURN_OFF        0    不亮
+ *引脚名
+ *C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3
  */
 void setup() {
   //初始化串口
   Serial.begin(115200);
-  
   /**
   * @brief  初始化LED驱动
   * @param clockPin 时钟引脚
@@ -50,14 +51,10 @@ void setup() {
 
 void loop() {
   /**
-   * @brief 设置某个灯的RGB颜色，这里将4号灯设置为黄色，对应引脚A3B3C3  
-   * @param ledNo 设置的灯的编号，一共四路/颗灯，取值1~4
-   * @param R     设置RGB红色分量，硬件应连接引脚B，取值范围0~255
-   * @param G     设置RGB绿色分量，硬件应连接引脚C，取值范围0~255
-   * @param B     设置RGB蓝色分量，硬件应连接引脚A，取值范围0~255
+   * @brief 点亮A3引脚上的LED灯，用12位二进制指定引脚，控制对应引脚的灯亮度
+   * @param bits        用二进制指定对应引脚，12位二进制从左往右依次对应引脚C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3，用十六进制表示范围是从0到0xfff
+   * @param brightness   设置亮度，取值范围0~255
   */
-  rgbDriver.setLed(/*ledNo=*/4,/*R=*/LED_FULL_BRIGHTNESS,/*G=*/LED_FULL_BRIGHTNESS,/*B=*/LED_TURN_OFF );
-  delay(1000);
+  rgbDriver.setPins(/*bits=*/0x001, /*brightness=*/LED_FULL_BRIGHTNESS);
+  delay(5000);
 }
-
-

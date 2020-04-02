@@ -15,12 +15,13 @@ DFRobot_MY9221SS	KEYWORD1
 begin	KEYWORD2
 sendCmd	KEYWORD2
 sendData	KEYWORD2
-latch	KEYWORD2
 write	KEYWORD2
 setLed	KEYWORD2
 setLedColor	KEYWORD2
 setAllLed	KEYWORD2
 autoColorChange	KEYWORD2
+setSinglePin	KEYWORD2
+setPins	KEYWORD2
               
 #######################################
 # Constants (LITERAL1)
