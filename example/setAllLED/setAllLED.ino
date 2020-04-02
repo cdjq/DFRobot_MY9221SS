@@ -29,7 +29,7 @@
 /**
  * @brief Constructor  LED驱动构造函数
  */
-DFRobot_MY9221SS rgbdriver(); 
+DFRobot_MY9221SS rgbdriver;
 
 /*
  *用到的宏定义
@@ -58,15 +58,15 @@ void loop() {
    * @param G     设置RGB绿色分量，硬件应连接引脚C，取值范围0~255
    * @param B     设置RGB蓝色分量，硬件应连接引脚A，取值范围0~255
   */
-  setAllLed(/*R=*/LED_FULL_BRIGHTNESS,/*G=*/LED_FULL_BRIGHTNESS,/*B=*/LED_FULL_BRIGHTNESS);
+  rgbdriver.setAllLed(/*R=*/LED_FULL_BRIGHTNESS,/*G=*/LED_FULL_BRIGHTNESS,/*B=*/LED_FULL_BRIGHTNESS);
   delay(1000);
   
   //显示最低亮度的红绿蓝
-  setAllLed(/*R=*/1,/*G=*/0,/*B=*/0);
+  rgbdriver.setAllLed(/*R=*/1,/*G=*/0,/*B=*/0);
   delay(1000);
-  setAllLed(/*R=*/0,/*G=*/1,/*B=*/0);
+  rgbdriver.setAllLed(/*R=*/0,/*G=*/1,/*B=*/0);
   delay(1000);
-  setAllLed(/*R=*/0,/*G=*/0,/*B=*/1);
+  rgbdriver.setAllLed(/*R=*/0,/*G=*/0,/*B=*/1);
   delay(1000);
 }
 

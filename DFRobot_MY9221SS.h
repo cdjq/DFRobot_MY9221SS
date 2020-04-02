@@ -1,7 +1,7 @@
 /*!
  * @file DFRobot_MY9221SS.h
  * @brief Define the basic structure of class DFRobot_MY9221SS
- * @n 
+ * @n
  *
  * @copyright   Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
@@ -70,8 +70,7 @@ public:
   * |               gck              |    sep   |    osc   |    pol   |   cntset  |   onest  |
   * ------------------------------------------------------------------------------------------
   */
-  typedef struct
-  {
+  typedef struct {
     uint8_t   temp: 5; /*!< Please filled with all “0” */
     uint8_t   hspd: 1; /*!< 0 :Iout slow mode 1 : Iout fast mode */
     uint8_t   bs: 2; /*!< 00 : 8-bit grayscale application 01 : 12-bit grayscale application 10 : 14-bit grayscale application 11 : 16-bit grayscale application */
@@ -83,13 +82,13 @@ public:
     uint8_t   onest:1; /*!< 0 : frame cycle repeat mode 1 : frame cycle One-shot mode (Only usable when cntset = “1”) */
   } __attribute__ ((packed)) sMode_t;
 
-  
+
 public:
   /**
    *@brief 构造函数
    */
   DFRobot_MY9221SS(void);
-  
+
   /**
    *@brief 初始化
    *@param pinClock 时钟引脚
@@ -112,7 +111,7 @@ public:
   /**
    *@brief 锁存信号
    */
-  void latch(void);   
+  void latch(void);
 
   /**
    *@brief 发送全部208位数据
@@ -121,15 +120,7 @@ public:
   void write(uint16_t* buf);
 
   /**
-   * @brief 设置所有灯的RGB颜色，这里设置为白色，最亮
-   * @param R     设置RGB红色分量，硬件应连接引脚B，取值范围0~255
-   * @param G     设置RGB绿色分量，硬件应连接引脚C，取值范围0~255
-   * @param B     设置RGB蓝色分量，硬件应连接引脚A，取值范围0~255
-  */
-  void setAllLed(uint16_t R, uint16_t G, uint16_t B);
-
-  /**
-   * @brief 设置某个灯的RGB颜色，4号灯对应引脚A3B3C3  
+   * @brief 设置某个灯的RGB颜色，4号灯对应引脚A3B3C3
    * @param ledNo 设置的灯的编号，取值1~4
    * @param R     设置RGB红色分量，硬件应连接引脚B，取值范围0~255
    * @param G     设置RGB绿色分量，硬件应连接引脚C，取值范围0~255
@@ -145,9 +136,20 @@ public:
   */
   void setLedColor(uint8_t ledNo, uint16_t color, uint8_t brightness);
 
+  /**
+   * @brief 设置所有灯的RGB颜色
+   * @param R     设置RGB红色分量，硬件应连接引脚B，取值范围0~255
+   * @param G     设置RGB绿色分量，硬件应连接引脚C，取值范围0~255
+   * @param B     设置RGB蓝色分量，硬件应连接引脚A，取值范围0~255
+  */
+  void setAllLed(uint16_t R, uint16_t G, uint16_t B);
+
+  void autoColorChange(void);
+
+
 private:
   void setDefaultMode(void);//设置默认模式
-  
+
 private:
   uint16_t _mode;
   uint32_t _pinClock;

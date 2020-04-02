@@ -30,7 +30,7 @@
 /**
  * @brief Constructor  LED驱动构造函数
  */
-DFRobot_MY9221SS rgbdriver();
+DFRobot_MY9221SS rgbdriver;
 
 /*
  *可供用户选择的宏定义颜色
@@ -64,11 +64,11 @@ void loop()
    * @param color         用宏定义控制led灯，格式是RGB565
    * @param brightness    亮度控制，取值范围0~255
   */
-  setLedColor(/*ledNo=*/4,/*color=*/COLOR_RGB565_GREEN,/*brightness=*/LED_FULL_BRIGHTNESS);
+  rgbdriver.setLedColor(/*ledNo=*/4,/*color=*/COLOR_RGB565_GREEN,/*brightness=*/LED_FULL_BRIGHTNESS);
   delay(1000);
-  setLedColor(/*ledNo=*/4,/*color=*/COLOR_RGB565_RED,/*brightness=*/LED_FULL_BRIGHTNESS);
+  rgbdriver.setLedColor(/*ledNo=*/4,/*color=*/COLOR_RGB565_RED,/*brightness=*/LED_FULL_BRIGHTNESS);
   delay(1000);
-  setLedColor(/*ledNo=*/4,/*color=*/COLOR_RGB565_BLUE,/*brightness=*/LED_FULL_BRIGHTNESS);
+  rgbdriver.setLedColor(/*ledNo=*/4,/*color=*/COLOR_RGB565_BLUE,/*brightness=*/LED_FULL_BRIGHTNESS);
   delay(1000);
 }
 
