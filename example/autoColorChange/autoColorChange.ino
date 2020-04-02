@@ -56,5 +56,5 @@ void loop() {
    * @brief 所有灯随机改变颜色
   */
   rgbdriver.autoColorChange();
-  
+  delay(1000);
 }

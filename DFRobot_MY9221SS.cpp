@@ -160,19 +160,15 @@ void DFRobot_MY9221SS::autoColorChange(void)//所有RGB灯自动改变颜色
   uint16_t G = 0xff; 
   uint16_t B = 0xff; 
   uint8_t r = (rand()%255);
-  while(1){
-    Serial.println(((rand()%255)));
   for(uint8_t i = 0; i < LED_BIN_COUNT; i++) {
     if(i%3 == 0) {
-      buf[i] = G / r ;
+      buf[i] = G / (r - 150) ;
     } else if(i%3 == 1) {
-      buf[i] = R / r ;
+      buf[i] = R / (r - 80) ;
     } else if(i%3 == 2) {
-      buf[i] = B / r ;
+      buf[i] = B / (r - 0) ;
     }
   }
   write(buf);//向芯片发送数据，12个引脚，每个16bit，共208bit
-  
-  }
 }
 

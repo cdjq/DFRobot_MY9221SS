@@ -144,6 +144,9 @@ public:
   */
   void setAllLed(uint16_t R, uint16_t G, uint16_t B);
 
+  /**
+   * @brief 所有灯的RGB颜色随机
+  */
   void autoColorChange(void);
 
 
