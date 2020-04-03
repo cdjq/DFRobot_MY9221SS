@@ -16,20 +16,20 @@ begin	KEYWORD2
 sendCmd	KEYWORD2
 sendData	KEYWORD2
 write	KEYWORD2
+setMode	KEYWORD2
 setLed	KEYWORD2
 setLedColor	KEYWORD2
 setAllLed	KEYWORD2
 autoColorChange	KEYWORD2
-setSinglePin	KEYWORD2
-setPins	KEYWORD2
+setSingleColorLed	KEYWORD2
+setSingleColorLeds	KEYWORD2
               
 #######################################
 # Constants (LITERAL1)
 #######################################
 
 LED_BIN_COUNT	LITERAL1
-LED_TURN_OFF	LITERAL1
-LED_FULL_BRIGHTNESS	LITERAL1
+LED_RGB_NO	LITERAL1
 C0	LITERAL1
 B0	LITERAL1
 A0	LITERAL1

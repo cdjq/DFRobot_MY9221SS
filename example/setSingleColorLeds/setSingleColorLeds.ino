@@ -1,5 +1,5 @@
 /*!
- * @file setPins.ino
+ * @file setSingleColorLeds.ino
  * @brief 通过12位二进制设置多个指定引脚的亮度，从左到右对应引脚C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3
  * @n 本示例支持的主板有ESP8266、FireBeetle-M0、UNO、ESP32、Leonardo 、Mega2560
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
@@ -32,10 +32,7 @@
 DFRobot_MY9221SS rgbDriver; 
 
 /*
- *可用的宏定义
- *LED_FULL_BRIGHTNESS 0xff 最高亮度
- *LED_TURN_OFF        0    不亮
- *引脚名
+ *宏定义引脚名
  *C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3
  */
 void setup() {
@@ -55,6 +52,16 @@ void loop() {
    * @param bits        用二进制指定对应引脚，12位二进制从左往右依次对应引脚C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3，用十六进制表示范围是从0到0xfff
    * @param brightness   设置亮度，取值范围0~255
   */
-  rgbDriver.setPins(/*bits=*/0x001, /*brightness=*/LED_FULL_BRIGHTNESS);
-  delay(5000);
+  rgbDriver.setSingleColorLeds(/*bits=*/0x001, /*brightness=*/0);
+  delay(500);
+  //逐渐变亮
+  for(uint16_t i = 0; i <= 255; i+=5) {
+    rgbDriver.setSingleColorLeds(/*bits=*/0x001, /*brightness=*/i);
+    delay(100);
+  }
+  //逐渐熄灭
+  for(uint16_t i = 255; i > 0; i-=5) {
+    rgbDriver.setSingleColorLeds(/*bits=*/0x001, /*brightness=*/i);
+    delay(100);
+  }
 }

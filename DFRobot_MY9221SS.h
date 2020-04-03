@@ -24,14 +24,8 @@
 #endif
 
 
-#define LED_PIN_COUNT   12            //芯片的RGB引脚总数
-
-/*
-*亮度调节
-*0是熄灭，255是最亮，数值越大灯会越亮
-*/
-#define LED_TURN_OFF           0     //关闭LED灯
-#define LED_FULL_BRIGHTNESS    0xff  //打开LED灯（最亮）
+#define LED_PIN_COUNT   12            //芯片的引脚总数
+#define LED_RGB_NO      3             //4组RGB引脚编号0~3
 
 
 class DFRobot_MY9221SS
@@ -64,15 +58,15 @@ public:
   * ------------------------------------------------------------------------------------------
   */
   typedef struct {
-    uint8_t   temp: 5; /*!< Please filled with all “0” */
-    uint8_t   hspd: 1; /*!< 0 :Iout slow mode 1 : Iout fast mode */
-    uint8_t   bs: 2; /*!< 00 : 8-bit grayscale application 01 : 12-bit grayscale application 10 : 14-bit grayscale application 11 : 16-bit grayscale application */
-    uint8_t   gck: 3; /*!< (If CMD[3]=1, please set CMD[7:5]=000)000 : original freq (8.6MHz) 001 : original freq/2 010 : original freq/4 011 : original freq/8 100 : original freq/16 101 : original freq64 110 : original freq/128 111 : original freq/256 */
-    uint8_t   sep:1; /*!< 0 : MY-PWM output waveform (similar to traditional waveform) 1 : APDM output waveform */
-    uint8_t   osc:1; /*!< 0 : internal oscillator (8.6MHz) (internal GCK source) 1 : external clock from GCKI pin (external GCK source) */
-    uint8_t   pol:1; /*!< 0 : work as LED driver 1 : work as MY-PWM/APDM generator */
-    uint8_t   cntset:1; /*!< 0 : free running mode 1 : counter reset mode (Only usable when osc = “1”) */
     uint8_t   onest:1; /*!< 0 : frame cycle repeat mode 1 : frame cycle One-shot mode (Only usable when cntset = “1”) */
+    uint8_t   cntset:1; /*!< 0 : free running mode 1 : counter reset mode (Only usable when osc = “1”) */
+    uint8_t   pol:1; /*!< 0 : work as LED driver 1 : work as MY-PWM/APDM generator */
+    uint8_t   osc:1; /*!< 0 : internal oscillator (8.6MHz) (internal GCK source) 1 : external clock from GCKI pin (external GCK source) */
+    uint8_t   sep:1; /*!< 0 : MY-PWM output waveform (similar to traditional waveform) 1 : APDM output waveform */
+    uint8_t   gck: 3; /*!< (If CMD[3]=1, please set CMD[7:5]=000)000 : original freq (8.6MHz) 001 : original freq/2 010 : original freq/4 011 : original freq/8 100 : original freq/16 101 : original freq64 110 : original freq/128 111 : original freq/256 */
+    uint8_t   bs: 2; /*!< 00 : 8-bit grayscale application 01 : 12-bit grayscale application 10 : 14-bit grayscale application 11 : 16-bit grayscale application */
+    uint8_t   hspd: 1; /*!< 0 :Iout slow mode 1 : Iout fast mode */
+    uint8_t   temp: 5; /*!< Please filled with all “0” */
   } __attribute__ ((packed)) sMode_t;
 
 
@@ -113,7 +107,7 @@ public:
    *@param cntset 自动更换画面模式或强制更换画面模式选择
    *@param onest 画面重复显示或只亮一次选择
    */
-  void setMode(uint8_t temp=0, uint8_t hspd=1, uint8_t bs=0, uint8_t gck=0, uint8_t sep=0, uint8_t osc=0, uint8_t pol=0, uint8_t cntset=0, uint8_t onest=0);
+  void setMode(uint8_t temp=0, uint8_t hspd=0, uint8_t bs=0, uint8_t gck=1, uint8_t sep=0, uint8_t osc=0, uint8_t pol=0, uint8_t cntset=0, uint8_t onest=0);
 
   /**
    *@brief 发送全部208位数据
@@ -148,14 +142,14 @@ public:
    * @param pinNo        设置的单个引脚的编号，使用引脚名即可，引脚名的宏定义与实物完全一致
    * @param brightness   设置亮度，取值范围0~255
   */
-  void setSinglePin(uint8_t pinNo, uint16_t brightness);
+  void setSingleColorLed(uint8_t pinNo, uint16_t brightness);
 
   /**
    * @brief 改用12位二进制，指定引脚并控制对应引脚亮度
    * @param bits        用二进制指定对应引脚，12位二进制从左往右依次对应引脚C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3，范围从0到0xfff
    * @param brightness   设置亮度，取值范围0~255
   */
-  void setPins(uint16_t bits, uint16_t brightness);
+  void setSingleColorLeds(uint16_t bits, uint16_t brightness);
 
 
 

@@ -1,6 +1,6 @@
 /*!
  * @file autoColorChange.ino
- * @brief 通过RGB设置红绿蓝三基色让LED灯闪烁，BRG三基色分别对应引脚A0~A3、B0~B3、C0~C3
+ * @brief 让所有LED灯渐亮渐灭，颜色随机，BRG三基色分别对应引脚A0~A3、B0~B3、C0~C3
  * @n 本示例支持的主板有ESP8266、FireBeetle-M0、UNO、ESP32、Leonardo 、Mega2560
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
@@ -31,11 +31,7 @@
  */
 DFRobot_MY9221SS rgbDriver; 
 
-/*
- *可用的宏定义
- *LED_FULL_BRIGHTNESS 0xff 最高亮度
- *LED_TURN_OFF        0    不亮
- */
+
 void setup() {
   //初始化串口
   Serial.begin(115200);
@@ -49,8 +45,8 @@ void setup() {
 
 void loop() {
   /**
-   * @brief 所有灯随机改变颜色
+   * @brief 所有灯随机颜色，渐亮渐灭
   */
   rgbDriver.autoColorChange();
-  delay(500);
+  delay(5000);
 }

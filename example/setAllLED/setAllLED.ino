@@ -31,11 +31,7 @@
  */
 DFRobot_MY9221SS rgbDriver;
 
-/*
- *可用的宏定义
- *LED_FULL_BRIGHTNESS 0xff 最高亮度
- *LED_TURN_OFF        0    不亮
- */
+
 void setup() {
   //初始化串口
   Serial.begin(115200);
@@ -49,15 +45,11 @@ void setup() {
 
 void loop() {
   /**
-   * @brief 设置所有灯的RGB颜色，这里设置为白色
+   * @brief 显示最低亮度的红绿蓝
    * @param R     设置RGB红色分量，硬件应连接引脚B，取值范围0~255
    * @param G     设置RGB绿色分量，硬件应连接引脚C，取值范围0~255
    * @param B     设置RGB蓝色分量，硬件应连接引脚A，取值范围0~255
   */
-  rgbDriver.setAllLed(/*R=*/LED_FULL_BRIGHTNESS,/*G=*/LED_FULL_BRIGHTNESS,/*B=*/LED_FULL_BRIGHTNESS);
-  delay(1000);
-  
-  //显示最低亮度的红绿蓝
   rgbDriver.setAllLed(/*R=*/1,/*G=*/0,/*B=*/0);
   delay(1000);
   rgbDriver.setAllLed(/*R=*/0,/*G=*/1,/*B=*/0);
