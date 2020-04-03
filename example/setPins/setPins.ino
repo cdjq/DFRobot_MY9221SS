@@ -1,6 +1,6 @@
 /*!
  * @file setPins.ino
- * @brief 通过设置A3引脚的亮度，点亮A3引脚上的灯，需将单色LED灯的负极接A3引脚，电源线接上合适的电压源
+ * @brief 通过12位二进制设置多个指定引脚的亮度，从左到右对应引脚C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3
  * @n 本示例支持的主板有ESP8266、FireBeetle-M0、UNO、ESP32、Leonardo 、Mega2560
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
