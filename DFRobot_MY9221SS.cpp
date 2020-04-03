@@ -87,7 +87,7 @@ void DFRobot_MY9221SS::write(uint16_t* buf)//向芯片发送设置命令和灰�
 
 void DFRobot_MY9221SS::setLed(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B)//用RGB888设置某一个RGB灯的颜色
 {
-  if(_mode & 0x0300 == 0x0300) {
+  if((_mode & 0x300 )== 0x300) {//判断是否是16位灰阶模式
     uint16_t  buf[LED_PIN_COUNT];
     ledNo = LED_RGB_NO - ledNo;
     if(ledNo <= LED_RGB_NO || ledNo >= 0) {
@@ -131,16 +131,29 @@ void DFRobot_MY9221SS::setLed(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B)
 void DFRobot_MY9221SS::setAllLed(uint16_t R, uint16_t G, uint16_t B)//用RGB888设置所有RGB灯的颜色
 {
   uint16_t  buf[LED_PIN_COUNT];
-  for(uint8_t i = 0; i < LED_PIN_COUNT; i++) {
-    if(i%3 == 0) {
-      buf[i] = G & 0xff;
-    } else if(i%3 == 1) {
-      buf[i] = R & 0xff;
-    } else if(i%3 == 2) {
-      buf[i] = B & 0xff;
+  if((_mode & 0x300 )== 0x300) {//判断是否是16位灰阶模式
+    for(uint8_t i = 0; i < LED_PIN_COUNT; i++) {
+      if(i%3 == 0) {
+        buf[i] = G ;
+      } else if(i%3 == 1) {
+        buf[i] = R ;
+      } else if(i%3 == 2) {
+        buf[i] = B ;
+      }
     }
+    write(buf);//向芯片写入数据，12个引脚，每个16bit
+  } else {
+    for(uint8_t i = 0; i < LED_PIN_COUNT; i++) {
+      if(i%3 == 0) {
+        buf[i] = G & 0xff;
+      } else if(i%3 == 1) {
+        buf[i] = R & 0xff;
+      } else if(i%3 == 2) {
+        buf[i] = B & 0xff;
+      }
+    }
+    write(buf);//向芯片写入数据，12个引脚，每个16bit
   }
-  write(buf);//向芯片写入数据，12个引脚，每个16bit
 }
 
 void DFRobot_MY9221SS::autoColorChange(void)//所有RGB灯，随机颜色
@@ -183,32 +196,62 @@ void DFRobot_MY9221SS::autoColorChange(void)//所有RGB灯，随机颜色
 
 void DFRobot_MY9221SS::setSingleColorLed(uint8_t pinNo, uint16_t brightness)//设置单个引脚的亮度
 {
-  uint16_t  buf[LED_PIN_COUNT];
-  pinNo = LED_PIN_COUNT - 1 - pinNo;
-  if(pinNo < LED_PIN_COUNT || pinNo >= 0) {
-    for(uint8_t i = 0; i < LED_PIN_COUNT; i++) {
-      if(i == pinNo) {
-        buf[i] = brightness & 0xff ;
-      } else {
-        buf[i] = 0;//每次发送数据，未设置的灯默认关闭
+  if((_mode & 0x300 )== 0x300) {//判断是否是16位灰阶模式
+    uint16_t  buf[LED_PIN_COUNT];
+    pinNo = LED_PIN_COUNT - 1 - pinNo;
+    if(pinNo < LED_PIN_COUNT || pinNo >= 0) {
+      for(uint8_t i = 0; i < LED_PIN_COUNT; i++) {
+        if(i == pinNo) {
+          buf[i] = brightness ;
+        } else {
+          buf[i] = 0;//每次发送数据，未设置的灯默认关闭
+        }
       }
+      write(buf);//向芯片写入数据，12个引脚，每个16bit
+    } else {
+      DBG("pinNo error");
     }
-    write(buf);//向芯片写入数据，12个引脚，每个16bit
   } else {
-    DBG("pinNo error");
+    uint16_t  buf[LED_PIN_COUNT];
+    pinNo = LED_PIN_COUNT - 1 - pinNo;
+    if(pinNo < LED_PIN_COUNT || pinNo >= 0) {
+      for(uint8_t i = 0; i < LED_PIN_COUNT; i++) {
+        if(i == pinNo) {
+          buf[i] = brightness & 0xff ;
+        } else {
+          buf[i] = 0;//每次发送数据，未设置的灯默认关闭
+        }
+      }
+      write(buf);//向芯片写入数据，12个引脚，每个16bit
+    } else {
+      DBG("pinNo error");
+    }
   }
 }
 
 void DFRobot_MY9221SS::setSingleColorLeds(uint16_t bits, uint16_t brightness)//改用12位二进制指定引脚，控制对应引脚亮度，最高位是C0，最低位是A11
 {
-  uint16_t  buf[LED_PIN_COUNT];
-  for(uint8_t i = 0; i < LED_PIN_COUNT; i++) {
-    if(bits & 0x0001) {
-      buf[i] = brightness & 0xff;
-    } else {
-      buf[i] = 0;//每次发送数据，未设置的灯默认关闭
+  if((_mode & 0x300 )== 0x300) {//判断是否是16位灰阶模式
+    uint16_t  buf[LED_PIN_COUNT];
+    for(uint8_t i = 0; i < LED_PIN_COUNT; i++) {
+      if(bits & 0x0001) {
+        buf[i] = brightness & 0xff;
+      } else {
+        buf[i] = 0;//每次发送数据，未设置的灯默认关闭
+      }
+      bits>>=1;
     }
-    bits>>=1;
+    write(buf);//向芯片写入数据，12个引脚，每个16bit
+  } else {
+    uint16_t  buf[LED_PIN_COUNT];
+    for(uint8_t i = 0; i < LED_PIN_COUNT; i++) {
+      if(bits & 0x0001) {
+        buf[i] = brightness & 0xff;
+      } else {
+        buf[i] = 0;//每次发送数据，未设置的灯默认关闭
+      }
+      bits>>=1;
+    }
+    write(buf);//向芯片写入数据，12个引脚，每个16bit
   }
-  write(buf);//向芯片写入数据，12个引脚，每个16bit
 }
