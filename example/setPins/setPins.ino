@@ -1,5 +1,5 @@
 /*!
- * @file setSinglePin.ino
+ * @file setPins.ino
  * @brief 通过设置A3引脚的亮度，点亮A3引脚上的灯，需将单色LED灯的负极接A3引脚，电源线接上合适的电压源
  * @n 本示例支持的主板有ESP8266、FireBeetle-M0、UNO、ESP32、Leonardo 、Mega2560
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)

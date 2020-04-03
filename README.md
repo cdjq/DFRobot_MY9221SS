@@ -75,7 +75,8 @@ Arduino uno        |      √       |              |             |
 Mega2560        |      √       |              |             | 
 Leonardo        |      √       |              |             | 
 ESP32        |      √       |              |             | 
-micro:bit        |      √       |              |             | 
+ESP8266        |      √       |              |             | 
+FireBeetle-M0        |      √       |              |             | 
 
 
 ## History

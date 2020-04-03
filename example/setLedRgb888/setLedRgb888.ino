@@ -1,6 +1,6 @@
 /*!
  * @file setLedRgb888.ino
- * @brief 用3个八位的RGB设置灯的颜色，点亮4号灯，BRG三基色分别对应引脚A3、B3、C3
+ * @brief 用3个八位的RGB设置灯的颜色，点亮4号灯，BRG三基色分别连接对应引脚A3、B3、C3
  * @n 本示例支持的主板有ESP8266、FireBeetle-M0、UNO、ESP32、Leonardo 、Mega2560
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)

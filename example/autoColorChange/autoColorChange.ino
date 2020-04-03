@@ -1,6 +1,6 @@
 /*!
- * @file blink.ino
- * @brief 通过RGB设置红绿蓝三基色让LED灯闪烁
+ * @file autoColorChange.ino
+ * @brief 通过RGB设置红绿蓝三基色让LED灯闪烁，BRG三基色分别对应引脚A0~A3、B0~B3、C0~C3
  * @n 本示例支持的主板有ESP8266、FireBeetle-M0、UNO、ESP32、Leonardo 、Mega2560
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)

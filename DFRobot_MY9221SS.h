@@ -36,7 +36,7 @@
 
 class DFRobot_MY9221SS
 {
-  //RGB Driver的RGB引脚的宏定义
+  //RGB Driver的各引脚名的宏定义
   #define  C0  0
   #define  B0  1
   #define  A0  2
