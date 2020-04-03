@@ -49,7 +49,7 @@ void DFRobot_MY9221SS::setMode(uint8_t temp, uint8_t hspd, uint8_t bs, uint8_t g
   mode.temp = temp;
   mode.hspd = hspd;
   mode.bs = bs;
-  mode.gck = gck;//频率太高可能会出现问题mode.temp<<11+mode.hspd<<10+mode.bs<<8+mode.gck<<5+mode.sep<<4+mode.osc<<3+mode.pol<<2+mode.cntset<<1+mode.onest
+  mode.gck = gck;//频率太高可能会出现问题
   mode.sep = sep;
   mode.osc = osc;
   mode.pol = pol;
