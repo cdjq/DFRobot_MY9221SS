@@ -23,6 +23,7 @@ DFRobot_MY9221SS是基于MY9221SS芯片的RGB驱动库，其芯片最大可承�
 
 * 控制12路单色LED灯的亮度 <br>
 * 分别控制4路带RGB和12V电源引脚的LED灯闪烁、亮度和改变色. <br>
+* 驱动可级联做相同的工作. <br>
 
 ## Installation
 
@@ -31,40 +32,85 @@ To use this library, first download the library file, paste it into the \Arduino
 ## Methods
 
 ```C++
-  /*!
+  /**
    *@brief 构造函数
    */
-  DFRobot_MY9221SS();
-  
-  /*!
+  DFRobot_MY9221SS(void);
+
+  /**
    *@brief 初始化
    *@param clockPin 时钟引脚
    *@param dataPin  数据引脚
    */
-  void begin(/*clockPin=*/CLK_PIN, /*dataPin=*/DATA_PIN);
+  void begin(uint32_t clockPin, uint32_t dataPin);
 
-  /*!
+  /**
    *@brief 发送16位CMD命令
    *@param bits 16位数据
    */
-  void sendCmd(uint16_t bits);  
+  void sendCmd(uint16_t bits);
 
-  /*!
+  /**
    *@brief 每次调用发送16位数据
    *@param bits 16位数据
    */
-  void sendData(uint16_t bits); 
+  void sendData(uint16_t bits);
 
-  /*!
-   *@brief 内部栓锁的控制
+  /**
+   *@brief 设置模式
+   *@param temp 保留位元
+   *@param hspd 输出电流反应速度选择
+   *@param bs  灰阶选择
+   *@param gck 内置灰阶时钟频率选择
+   *@param sep 输出电流打散与不打散选择
+   *@param osc 灰阶时钟频率来源选择
+   *@param pol 输出电流极性选择
+   *@param cntset 自动更换画面模式或强制更换画面模式选择
+   *@param onest 画面重复显示或只亮一次选择
    */
-  void latch(void);   
+  void setMode(uint8_t temp=0, uint8_t hspd=1, uint8_t bs=0, uint8_t gck=0, uint8_t sep=0, uint8_t osc=0, uint8_t pol=0, uint8_t cntset=0, uint8_t onest=0);
 
-  /*!
+  /**
    *@brief 发送全部208位数据
    *@param buf 指向192bit灰阶数据的指针，从控制引脚A3的16bit数据开始发送
    */
-  void write(uint16_t* buf); 
+  void write(uint16_t* buf);
+
+  /**
+   * @brief 设置某个灯的RGB颜色，4号灯对应引脚A3B3C3
+   * @param ledNo 设置的灯的编号，一共四路/颗灯，取值1~4
+   * @param R     设置RGB红色分量，硬件应连接引脚B，取值范围0~255
+   * @param G     设置RGB绿色分量，硬件应连接引脚C，取值范围0~255
+   * @param B     设置RGB蓝色分量，硬件应连接引脚A，取值范围0~255
+  */
+  void setLed(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B);
+
+  /**
+   * @brief 设置所有灯的RGB颜色
+   * @param R     设置RGB红色分量，硬件应连接引脚B，取值范围0~255
+   * @param G     设置RGB绿色分量，硬件应连接引脚C，取值范围0~255
+   * @param B     设置RGB蓝色分量，硬件应连接引脚A，取值范围0~255
+  */
+  void setAllLed(uint16_t R, uint16_t G, uint16_t B);
+
+  /**
+   * @brief 点亮所有灯，RGB颜色随机
+  */
+  void autoColorChange(void);
+
+  /**
+   * @brief 设置单个引脚的亮度，可用于调节单色灯的亮度
+   * @param pinNo        设置的单个引脚的编号，使用引脚名即可，引脚名的宏定义与实物完全一致
+   * @param brightness   设置亮度，取值范围0~255
+  */
+  void setSinglePin(uint8_t pinNo, uint16_t brightness);
+
+  /**
+   * @brief 改用12位二进制，指定引脚并控制对应引脚亮度
+   * @param bits        用二进制指定对应引脚，12位二进制从左往右依次对应引脚C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3，范围从0到0xfff
+   * @param brightness   设置亮度，取值范围0~255
+  */
+  void setPins(uint16_t bits, uint16_t brightness); 
 ```
 
 ## Compatibility
