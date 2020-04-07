@@ -1,6 +1,6 @@
 /*!
  * @file setMode.ino
- * @brief 设置模式示例，选择灰阶为16位替换掉默认的8位模式，用3个16位的RGB设置灯的颜色，BRG三基色分别连接对应引脚A3、B3、C3
+ * @brief 设置模式示例，选择灰阶为16位替换掉默认的8位模式，用3个16位的RGB设置灯的颜色，BRG三基色分别连接对应引脚A3、B3、C3，本示例将3号灯的颜色设置为橙色，如果不设置模式为16bit灰阶数据，0xffff前八位就会无效，灯变为黄色
  * @n 本示例支持的主板有ESP8266、FireBeetle-M0、UNO、ESP32、Leonardo 、Mega2560
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
@@ -57,17 +57,23 @@ void setup() {
    * @param cntset 自动更换画面模式或强制更换画面模式选择
    * @param onest 画面重复显示或只亮一次选择
    */
+   rgbDriver.setMode(/*temp=*/0, /*hspd=*/1, /*bs=*/3, /*gck=*/1, /*sep=*/1, /*osc=*/0, /*pol=*/0, /*cntset=*/0, /*onest=*/0);
 }
 
 void loop() {
-   rgbDriver.setMode(/*temp=*/0, /*hspd=*/0, /*bs=*/3, /*gck=*/7, /*sep=*/0, /*osc=*/0, /*pol=*/0, /*cntset=*/0, /*onest=*/0);
    /**
-   * @brief 设置某个灯的RGB颜色，这里将3号灯设置为橙色，对应引脚A3B3C3  
+   * @brief 设置某个灯的颜色，这里将3号灯设置为橙色，对应引脚A3B3C3
    * @param ledNo 设置的灯的编号，一共四路/颗灯，取值0~3
    * @param R     设置RGB红色分量，硬件应连接引脚B，取值范围0~0xffff
    * @param G     设置RGB绿色分量，硬件应连接引脚C，取值范围0~0xffff
    * @param B     设置RGB蓝色分量，硬件应连接引脚A，取值范围0~0xffff
   */
-  rgbDriver.setLed(/*ledNo=*/3,/*R=*/0xffff,/*G=*/0xff,/*B=*/0 );
+  // rgbDriver.setLedColor(/*ledNo=*/3,/*R=*/0xffff,/*G=*/0xff,/*B=*/0 );
+  // delay(1000);
+  // rgbDriver.setLedColor(/*ledNo=*/3,/*R=*/0xff,/*G=*/0xff,/*B=*/0 );
+  // delay(1000);
+  rgbDriver.setSingleColorLeds(/*pinNo=*/B3, /*brightness=*/0xffff);
+  delay(1000);
+  rgbDriver.setSingleColorLeds(/*pinNo=*/B3, /*brightness=*/0xff);
   delay(1000);
 }

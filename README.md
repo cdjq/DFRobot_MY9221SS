@@ -68,7 +68,9 @@ To use this library, first download the library file, paste it into the \Arduino
    *@param cntset 自动更换画面模式或强制更换画面模式选择
    *@param onest 画面重复显示或只亮一次选择
    */
-  void setMode(uint8_t temp=0, uint8_t hspd=1, uint8_t bs=0, uint8_t gck=0, uint8_t sep=0, uint8_t osc=0, uint8_t pol=0, uint8_t cntset=0, uint8_t onest=0);
+  void setMode(uint8_t temp=0, uint8_t hspd=1, uint8_t bs=0,\
+               uint8_t gck=0, uint8_t sep=0, uint8_t osc=0, \
+               uint8_t pol=0, uint8_t cntset=0, uint8_t onest=0);
 
   /**
    *@brief 发送全部208位数据
@@ -77,19 +79,19 @@ To use this library, first download the library file, paste it into the \Arduino
   void write(uint16_t* buf);
 
   /**
-   * @brief 设置某个灯的RGB颜色，4号灯对应引脚A3B3C3
+   * @brief 设置某个灯的颜色，4号灯对应引脚A3B3C3
    * @param ledNo 设置的灯的编号，一共四路/颗灯，取值1~4
-   * @param R     设置RGB红色分量，硬件应连接引脚B，取值范围0~255
-   * @param G     设置RGB绿色分量，硬件应连接引脚C，取值范围0~255
-   * @param B     设置RGB蓝色分量，硬件应连接引脚A，取值范围0~255
+   * @param R     设置RGB红色分量，硬件应连接引脚B，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
+   * @param G     设置RGB绿色分量，硬件应连接引脚C，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
+   * @param B     设置RGB蓝色分量，硬件应连接引脚A，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
   */
-  void setLed(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B);
+  void setLedColor(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B);
 
   /**
-   * @brief 设置所有灯的RGB颜色
-   * @param R     设置RGB红色分量，硬件应连接引脚B，取值范围0~255
-   * @param G     设置RGB绿色分量，硬件应连接引脚C，取值范围0~255
-   * @param B     设置RGB蓝色分量，硬件应连接引脚A，取值范围0~255
+   * @brief 设置所有灯的颜色
+   * @param R     设置RGB红色分量，硬件应连接引脚B，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
+   * @param G     设置RGB绿色分量，硬件应连接引脚C，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
+   * @param B     设置RGB蓝色分量，硬件应连接引脚A，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
   */
   void setAllLed(uint16_t R, uint16_t G, uint16_t B);
 
@@ -99,18 +101,11 @@ To use this library, first download the library file, paste it into the \Arduino
   void autoColorChange(void);
 
   /**
-   * @brief 设置单个引脚的亮度，可用于调节单色灯的亮度
-   * @param pinNo        设置的单个引脚的编号，使用引脚名即可，引脚名的宏定义与实物完全一致
-   * @param brightness   设置亮度，取值范围0~255
-  */
-  void setSingleColorLed(uint8_t pinNo, uint16_t brightness);
-
-  /**
    * @brief 改用12位二进制，指定引脚并控制对应引脚亮度
    * @param bits        用二进制指定对应引脚，12位二进制从左往右依次对应引脚C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3，范围从0到0xfff
-   * @param brightness   设置亮度，取值范围0~255
+   * @param brightness   设置亮度，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
   */
-  void setSingleColorLeds(uint16_t bits, uint16_t brightness); 
+  void setSingleColorLeds(uint16_t pinNo, uint16_t brightness); 
 ```
 
 ## Compatibility

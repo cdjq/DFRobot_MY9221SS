@@ -1,6 +1,6 @@
 /*!
  * @file setSingleColorLeds.ino
- * @brief 通过12位二进制设置多个指定引脚的亮度，从左到右对应引脚C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3
+ * @brief 通过宏定义设置多个指定引脚的亮度，例如（A3+B2+C1+C0）或（A3|B2|C1|C0），控制A3B2C1C0引脚上的灯
  * @n 本示例支持的主板有ESP8266、FireBeetle-M0、UNO、ESP32、Leonardo 、Mega2560
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
@@ -48,20 +48,20 @@ void setup() {
 
 void loop() {
   /**
-   * @brief 点亮A3引脚上的LED灯，用12位二进制指定引脚，控制对应引脚的灯亮度
-   * @param bits        用二进制指定对应引脚，12位二进制从左往右依次对应引脚C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3，用十六进制表示范围是从0到0xfff
-   * @param brightness   设置亮度，取值范围0~255
+   * @brief 点亮A3和B3引脚上的LED灯，用宏定义指定引脚，控制对应引脚的灯亮度
+   * @param pinNo        宏定义引脚名
+   * @param brightness   设置亮度，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
   */
-  rgbDriver.setSingleColorLeds(/*bits=*/0x001, /*brightness=*/0);
+  rgbDriver.setSingleColorLeds(/*pinNo=*/A3+B3, /*brightness=*/0);
   delay(500);
   //逐渐变亮
   for(uint16_t i = 0; i <= 255; i+=5) {
-    rgbDriver.setSingleColorLeds(/*bits=*/0x001, /*brightness=*/i);
+    rgbDriver.setSingleColorLeds(/*pinNo=*/A3+B3, /*brightness=*/i);
     delay(100);
   }
   //逐渐熄灭
   for(uint16_t i = 255; i > 0; i-=5) {
-    rgbDriver.setSingleColorLeds(/*bits=*/0x001, /*brightness=*/i);
+    rgbDriver.setSingleColorLeds(/*pinNo=*/A3+B3, /*brightness=*/i);
     delay(100);
   }
 }

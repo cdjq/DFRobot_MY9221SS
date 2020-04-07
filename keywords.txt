@@ -17,11 +17,10 @@ sendCmd	KEYWORD2
 sendData	KEYWORD2
 write	KEYWORD2
 setMode	KEYWORD2
-setLed	KEYWORD2
+setLedColor	KEYWORD2
 setLedColor	KEYWORD2
 setAllLed	KEYWORD2
 autoColorChange	KEYWORD2
-setSingleColorLed	KEYWORD2
 setSingleColorLeds	KEYWORD2
               
 #######################################
