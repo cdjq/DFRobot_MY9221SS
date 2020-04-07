@@ -62,16 +62,10 @@ void setup() {
 
 void loop() {
    /**
-   * @brief 设置某个灯的颜色，这里将3号灯设置为橙色，对应引脚A3B3C3
+   * @brief 设置某个灯的颜色，这里将B3号引脚上的灯的亮度，如果灰阶选择为16位，将会观察到亮度变化
    * @param ledNo 设置的灯的编号，一共四路/颗灯，取值0~3
    * @param R     设置RGB红色分量，硬件应连接引脚B，取值范围0~0xffff
-   * @param G     设置RGB绿色分量，硬件应连接引脚C，取值范围0~0xffff
-   * @param B     设置RGB蓝色分量，硬件应连接引脚A，取值范围0~0xffff
   */
-  // rgbDriver.setLedColor(/*ledNo=*/3,/*R=*/0xffff,/*G=*/0xff,/*B=*/0 );
-  // delay(1000);
-  // rgbDriver.setLedColor(/*ledNo=*/3,/*R=*/0xff,/*G=*/0xff,/*B=*/0 );
-  // delay(1000);
   rgbDriver.setSingleColorLeds(/*pinNo=*/B3, /*brightness=*/0xffff);
   delay(1000);
   rgbDriver.setSingleColorLeds(/*pinNo=*/B3, /*brightness=*/0xff);
