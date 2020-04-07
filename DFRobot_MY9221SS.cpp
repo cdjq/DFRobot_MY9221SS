@@ -188,8 +188,7 @@ void DFRobot_MY9221SS::autoColorChange(void)//所有RGB灯，随机颜色
   write(buf);
 }
 
-
-void DFRobot_MY9221SS::setSingleColorLeds(uint16_t pinNo, uint16_t brightness)//改用12位二进制指定引脚，控制对应引脚亮度，最高位是C0，最低位是A11
+void DFRobot_MY9221SS::setSingleColorLeds(uint16_t pinNo, uint16_t brightness)//改用12位二进制指定引脚，用宏定义控制对应引脚亮度，最高位表示A11，最低位是C0
 {
   uint16_t  buf[LED_PIN_COUNT];
   if((_mode & 0x300 )== 0x300) {//判断是否是16位灰阶模式
