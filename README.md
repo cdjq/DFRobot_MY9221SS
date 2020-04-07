@@ -101,8 +101,8 @@ To use this library, first download the library file, paste it into the \Arduino
   void autoColorChange(void);
 
   /**
-   * @brief 改用12位二进制，指定引脚并控制对应引脚亮度
-   * @param bits        用二进制指定对应引脚，12位二进制从左往右依次对应引脚C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3，范围从0到0xfff
+   * @brief 用宏定义，指定引脚并控制对应单色灯的亮度
+   * @param pinNo        宏定义引脚名
    * @param brightness   设置亮度，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
   */
   void setSingleColorLeds(uint16_t pinNo, uint16_t brightness); 
