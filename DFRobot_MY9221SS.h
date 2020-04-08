@@ -27,12 +27,12 @@
 
 
 #define LED_PIN_COUNT   12            //每个芯片的LED引脚总数
-#define LED_RGB_NO      3             //每个芯片4组RGB灯，最大编号
+#define LED_RGB_NO      3             //RGB灯的最大编号
 
 
 class DFRobot_MY9221SS
 {
-  //各引脚名的宏定义
+  //引脚名的宏定义
   #define  C0  (1<<0)
   #define  B0  (1<<1)
   #define  A0  (1<<2)
@@ -92,7 +92,7 @@ public:
   void begin(uint32_t clockPin, uint32_t dataPin);
 
   /**
-   *@brief 发送16位CMD命令
+   *@brief 发送16位命令
    *@param cmd 16位数据
    */
   void sendCmd(uint16_t cmd);
@@ -120,7 +120,7 @@ public:
                uint8_t pol=0, uint8_t cntset=0, uint8_t onest=0);
 
   /**
-   *@brief 发送全部208位数据，数组的元素从11到0分别控制引脚C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3
+   *@brief 发送全部数据，数组的元素从11到0分别控制引脚C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3
    *@param buf 指向192bit灰阶数据的指针
    */
   void write(uint16_t* buf);
@@ -128,16 +128,16 @@ public:
   /**
    * @brief 指定LED灯，并通过RGB各分量控制颜色  
    * @param ledNo 宏定义灯名，一共四路/颗灯，LED0~LED3
-   * @param R     设置RGB红色分量，硬件应连接引脚B，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
-   * @param G     设置RGB绿色分量，硬件应连接引脚A，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
-   * @param B     设置RGB蓝色分量，硬件应连接引脚C，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
+   * @param R     设置RGB红色分量，硬件应连接引脚B，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
+   * @param G     设置RGB绿色分量，硬件应连接引脚A，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
+   * @param B     设置RGB蓝色分量，硬件应连接引脚C，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
   */
   void setRgbLeds(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B);
 
   /**
    * @brief 用宏定义指定引脚并控制引脚上单色灯的亮度
    * @param pinNo      宏定义引脚名
-   * @param brightness 设置亮度，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
+   * @param brightness 设置亮度，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
   */
   void setSingleColorLeds(uint16_t pinNo, uint16_t brightness);
 

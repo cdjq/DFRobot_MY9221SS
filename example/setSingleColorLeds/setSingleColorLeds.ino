@@ -50,7 +50,7 @@ void loop() {
   /**
    * @brief 用宏定义指定引脚并控制引脚上单色灯的亮度
    * @param pinNo        宏定义引脚名
-   * @param brightness   设置亮度，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
+   * @param brightness   设置亮度，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
   */
   rgbDriver.setSingleColorLeds(/*pinNo=*/A3+B3, /*brightness=*/0);
   delay(500);

@@ -1,6 +1,6 @@
 /*!
- * @file writeGrayScaleData.ino
- * @brief 用数组存放12个灰阶数据，控制引脚状态
+ * @file freeSetLED.ino
+ * @brief 用数组控制引脚状态，用数组存放12个灰阶数据，数组的元素从11到0分别控制引脚C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3
  * @n 本示例支持的主板有ESP8266、FireBeetle-M0、UNO、ESP32、Leonardo 、Mega2560
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
@@ -43,11 +43,11 @@ void setup() {
   rgbDriver.begin(/*clockPin=*/CLK_PIN, /*dataPin=*/DATA_PIN);
 }
 
-//8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
-uint16_t  buf[12]={/*A3=*/255,/*B3=*/255,/*C3=*/255,
-                   /*A2=*/255,/*B2=*/255,/*C2=*/255,
-                   /*A1=*/255,/*B1=*/255,/*C1=*/255,
-                   /*A0=*/255,/*B0=*/255,/*C0=*/255};
+//8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
+uint16_t  buf[12]={/*A3*/255,/*B3*/255,/*C3*/255,
+                   /*A2*/255,/*B2*/255,/*C2*/255,
+                   /*A1*/255,/*B1*/255,/*C1*/255,
+                   /*A0*/255,/*B0*/255,/*C0*/255};
 
 void loop() {
   buf[0] = 0;

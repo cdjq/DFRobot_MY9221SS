@@ -81,9 +81,9 @@ To use this library, first download the library file, paste it into the \Arduino
   /**
    * @brief 指定LED灯，并通过RGB各分量控制颜色  
    * @param ledNo 宏定义灯名，一共四路/颗灯，LED0~LED3
-   * @param R     设置RGB红色分量，硬件应连接引脚B，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
-   * @param G     设置RGB绿色分量，硬件应连接引脚A，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
-   * @param B     设置RGB蓝色分量，硬件应连接引脚C，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
+   * @param R     设置RGB红色分量，硬件应连接引脚B，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
+   * @param G     设置RGB绿色分量，硬件应连接引脚A，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
+   * @param B     设置RGB蓝色分量，硬件应连接引脚C，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
   */
   void setRgbLeds(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B);
 
@@ -95,7 +95,7 @@ To use this library, first download the library file, paste it into the \Arduino
   /**
    * @brief 用宏定义指定引脚并控制引脚上单色灯的亮度
    * @param pinNo        宏定义引脚名
-   * @param brightness   设置亮度，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
+   * @param brightness   设置亮度，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
   */
   void setSingleColorLeds(uint16_t pinNo, uint16_t brightness); 
 ```

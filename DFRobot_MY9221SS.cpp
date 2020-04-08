@@ -70,7 +70,7 @@ void DFRobot_MY9221SS::write(uint16_t* buf)//向芯片发送设置命令和灰�
   for (uint8_t i = 0; i < 12; i++) { //发送灰阶数据，从A3引脚的buf开始发
     sendData(buf[i]);
   }
-  //所有数据发送完后发送锁存信号，灰阶资料和命令锁存后自动发给驱动器使LED灯工作
+  //所有数据发送完后发送锁存信号，灰阶资料和命令锁存后才可使LED灯工作
   digitalWrite(_dataPin, LOW);
   delayMicroseconds(240);//固定延时
   digitalWrite(_dataPin, HIGH);
@@ -81,7 +81,7 @@ void DFRobot_MY9221SS::write(uint16_t* buf)//向芯片发送设置命令和灰�
   digitalWrite(_dataPin, LOW);
   digitalWrite(_dataPin, HIGH);
   digitalWrite(_dataPin, LOW);
-  delayMicroseconds(1);//在串接应用下，Tsop(最小值)必须大于[200ns+N*10ns]，其中 N 为芯片串接数目
+  delayMicroseconds(1);//Tsop(最小值)必须大于[200ns+N*10ns]，其中 N 为芯片串接数目
 }
 
 void DFRobot_MY9221SS::setRgbLeds(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B)
