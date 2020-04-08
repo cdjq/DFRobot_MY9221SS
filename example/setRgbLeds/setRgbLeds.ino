@@ -1,6 +1,7 @@
 /*!
- * @file blink.ino
- * @brief 所有灯闪烁，基色B对应引脚A0~A3、基色R对应引脚B0~B3、基色G对应引脚C0~C3，请将RGB灯的引脚按GRB顺序连接Ax、Bx、Cx
+ * @file setRgbLeds.ino
+ * @brief 用RGB值设置指定LED灯的颜色，点亮所有灯，请将RGB灯的引脚连接Ax、Bx、Cx
+ * @n 基色G对应引脚A0~A3、基色R对应引脚B0~B3、基色B对应引脚C0~C3
  * @n 本示例支持的主板有ESP8266、FireBeetle-M0、UNO、ESP32、Leonardo 、Mega2560
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
@@ -27,9 +28,9 @@
 #endif
 
 /**
- * @brief Constructor LED驱动构造函数
+ * @brief Constructor  LED驱动构造函数
  */
-DFRobot_MY9221SS rgbDriver; 
+DFRobot_MY9221SS rgbDriver;
 
 /*
  *供用户使用的宏定义LED灯名
@@ -54,16 +55,11 @@ void loop() {
    * @param G     设置RGB绿色分量，硬件应连接引脚A，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
    * @param B     设置RGB蓝色分量，硬件应连接引脚C，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
   */
-  rgbDriver.setRgbLeds(/*ledNo=*/LED0|LED1|LED2|LED3,/*R=*/0xff,/*G=*/0xff,/*B=*/0xff);
-  delay(200);
-  //关灯
-  rgbDriver.setRgbLeds(/*ledNo=*/LED0|LED1|LED2|LED3,/*R=*/0,/*G=*/0,/*B=*/0);
-  delay(200);
+  rgbDriver.setRgbLeds(/*ledNo=*/LED0|LED1|LED2|LED3,/*R=*/1,/*G=*/0,/*B=*/0);
+  delay(1000);
+  rgbDriver.setRgbLeds(/*ledNo=*/LED0|LED1|LED2|LED3,/*R=*/0,/*G=*/1,/*B=*/0);
+  delay(1000);
+  rgbDriver.setRgbLeds(/*ledNo=*/LED0|LED1|LED2|LED3,/*R=*/0,/*G=*/0,/*B=*/1);
+  delay(1000);
 }
 
-
-
-
-
-
-  

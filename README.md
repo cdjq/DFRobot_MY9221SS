@@ -1,6 +1,6 @@
-# DFRobot_MY9221SS  RGB驱动库
+# DFRobot_MY9221SS  通过PWM调节的LED灯的驱动库
 DFRobot_MY9221SS是基于MY9221SS芯片的RGB驱动库，其芯片最大可承受17V电压，可以驱动带12V电源线和RGB引脚的LED灯，通过PWM调节灯的红绿蓝三基色的亮度从而组成混色。<br>
-该驱动支持级联，可以将多个驱动级联同时进行相同的工作。<br>
+该驱动支持级联，可以将多个驱动串联，驱动可级联，每次发送命令后，后一个驱动的工作状态会继承前一个驱动工作状态。<br>
 每个驱动可分别控制4颗大功率LED灯，每颗LED灯可串联多颗。<br>
 该库也可以用于驱动12颗单色灯，通过PWM可分别控制调节每一颗灯的亮度。  <br>
 
@@ -22,8 +22,8 @@ DFRobot_MY9221SS是基于MY9221SS芯片的RGB驱动库，其芯片最大可承�
 ## Summary
 
 * 控制12路单色LED灯的亮度 <br>
-* 分别控制4路带RGB和12V电源引脚的LED灯闪烁、亮度和改变色. <br>
-* 驱动可级联做相同的工作. <br>
+* 分别控制4路带RGB和12V电源引脚的LED灯闪烁、亮度和变色. <br>
+* 驱动可级联，后一个驱动会跟随前一个驱动的状态. <br>
 
 ## Installation
 
@@ -46,15 +46,15 @@ To use this library, first download the library file, paste it into the \Arduino
 
   /**
    *@brief 发送16位CMD命令
-   *@param bits 16位数据
+   *@param cmd 16位数据
    */
-  void sendCmd(uint16_t bits);
+  void sendCmd(uint16_t cmd);
 
   /**
-   *@brief 每次调用发送16位数据
-   *@param bits 16位数据
+   *@brief 发送16位数据
+   *@param data 16位数据
    */
-  void sendData(uint16_t bits);
+  void sendData(uint16_t data);
 
   /**
    *@brief 设置模式
@@ -73,27 +73,19 @@ To use this library, first download the library file, paste it into the \Arduino
                uint8_t pol=0, uint8_t cntset=0, uint8_t onest=0);
 
   /**
-   *@brief 发送全部208位数据
-   *@param buf 指向192bit灰阶数据的指针，从控制引脚A3的16bit数据开始发送
+   *@brief 发送全部数据
+   *@param buf 指向192bit灰阶数据的指针
    */
   void write(uint16_t* buf);
 
   /**
-   * @brief 设置某个灯的颜色，4号灯对应引脚A3B3C3
-   * @param ledNo 设置的灯的编号，一共四路/颗灯，取值1~4
+   * @brief 指定LED灯，并通过RGB各分量控制颜色  
+   * @param ledNo 宏定义灯名，一共四路/颗灯，LED0~LED3
    * @param R     设置RGB红色分量，硬件应连接引脚B，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
-   * @param G     设置RGB绿色分量，硬件应连接引脚C，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
-   * @param B     设置RGB蓝色分量，硬件应连接引脚A，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
+   * @param G     设置RGB绿色分量，硬件应连接引脚A，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
+   * @param B     设置RGB蓝色分量，硬件应连接引脚C，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
   */
-  void setLedColor(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B);
-
-  /**
-   * @brief 设置所有灯的颜色
-   * @param R     设置RGB红色分量，硬件应连接引脚B，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
-   * @param G     设置RGB绿色分量，硬件应连接引脚C，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
-   * @param B     设置RGB蓝色分量，硬件应连接引脚A，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
-  */
-  void setAllLed(uint16_t R, uint16_t G, uint16_t B);
+  void setRgbLeds(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B);
 
   /**
    * @brief 点亮所有灯，RGB颜色随机
@@ -101,7 +93,7 @@ To use this library, first download the library file, paste it into the \Arduino
   void autoColorChange(void);
 
   /**
-   * @brief 用宏定义，指定引脚并控制对应单色灯的亮度
+   * @brief 用宏定义指定引脚并控制引脚上单色灯的亮度
    * @param pinNo        宏定义引脚名
    * @param brightness   设置亮度，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
   */

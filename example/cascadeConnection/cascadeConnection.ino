@@ -1,6 +1,7 @@
 /*!
- * @file blink.ino
- * @brief 所有灯闪烁，基色B对应引脚A0~A3、基色R对应引脚B0~B3、基色G对应引脚C0~C3，请将RGB灯的引脚按GRB顺序连接Ax、Bx、Cx
+ * @file cascadeConnection.ino
+ * @brief 本示例使用驱动芯片串联（将DO连接下一个驱动的D，将DC连接下一个驱动的C，再接上正负极）使用，RGB灯分别接于驱动的3号引脚上，后一个灯会跟随前一个灯变化。
+ * @n 基色G对应引脚A0~A3、基色R对应引脚B0~B3、基色B对应引脚C0~C3
  * @n 本示例支持的主板有ESP8266、FireBeetle-M0、UNO、ESP32、Leonardo 、Mega2560
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
@@ -32,8 +33,8 @@
 DFRobot_MY9221SS rgbDriver; 
 
 /*
- *供用户使用的宏定义LED灯名
- *LED0 LED1 LED2 LED3
+ *供用户使用的宏定义引脚名
+ *C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3
  */
 void setup() {
   //初始化串口
@@ -47,6 +48,13 @@ void setup() {
 }
 
 void loop() {
+   /**
+   * @brief 用宏定义指定引脚并控制引脚上单色灯的亮度
+   * @param pinNo        宏定义引脚名
+   * @param brightness   设置亮度，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
+  */
+  rgbDriver.setSingleColorLeds(/*pinNo=*/A3|B3|C3, /*brightness=*/0xf);
+  delay(1000);
   /**
    * @brief 指定LED灯，并通过RGB各分量控制颜色  
    * @param ledNo 宏定义灯名，一共四路/颗灯，LED0~LED3
@@ -54,16 +62,16 @@ void loop() {
    * @param G     设置RGB绿色分量，硬件应连接引脚A，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
    * @param B     设置RGB蓝色分量，硬件应连接引脚C，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
   */
-  rgbDriver.setRgbLeds(/*ledNo=*/LED0|LED1|LED2|LED3,/*R=*/0xff,/*G=*/0xff,/*B=*/0xff);
-  delay(200);
-  //关灯
-  rgbDriver.setRgbLeds(/*ledNo=*/LED0|LED1|LED2|LED3,/*R=*/0,/*G=*/0,/*B=*/0);
-  delay(200);
+  rgbDriver.setRgbLeds(/*ledNo=*/LED3,/*R=*/0xf,/*G=*/0,/*B=*/0 );
+  delay(1000);
+  rgbDriver.setRgbLeds(/*ledNo=*/LED3,/*R=*/0,/*G=*/0xf,/*B=*/0 );
+  delay(1000);
+  rgbDriver.setRgbLeds(/*ledNo=*/LED3,/*R=*/0,/*G=*/0,/*B=*/0xf );
+  delay(1000);
+  rgbDriver.setRgbLeds(/*ledNo=*/LED3,/*R=*/0,/*G=*/0xf,/*B=*/0xf );
+  delay(1000);
+  rgbDriver.setRgbLeds(/*ledNo=*/LED3,/*R=*/0xf,/*G=*/0,/*B=*/0xf );
+  delay(1000);
+  rgbDriver.setRgbLeds(/*ledNo=*/LED3,/*R=*/0xf,/*G=*/0xf,/*B=*/0 );
+  delay(5000);//所有灯保持一段时间不变色
 }
-
-
-
-
-
-
-  

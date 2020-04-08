@@ -1,6 +1,6 @@
 /*!
  * @file setMode.ino
- * @brief 设置模式示例，选择灰阶为16位替换掉默认的8位模式，用3个16位的RGB设置灯的颜色，BRG三基色分别连接对应引脚A3、B3、C3，本示例将3号灯的颜色设置为橙色，如果不设置模式为16bit灰阶数据，0xffff前八位就会无效，灯变为黄色
+ * @brief 设置模式示例，选择灰阶为16位替换掉默认的8位模式，灯的负极连接A3B3C3中的任意引脚，正极接电源，会观察到四个不同的亮度变化
  * @n 本示例支持的主板有ESP8266、FireBeetle-M0、UNO、ESP32、Leonardo 、Mega2560
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
@@ -32,9 +32,10 @@
 DFRobot_MY9221SS rgbDriver; 
 
 /*
- *可用的宏定义
- *引脚名
+ *供用户使用的宏定义引脚名
  *C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3
+ *供用户使用的宏定义LED灯名
+ *LED0 LED1 LED2 LED3
  */
 void setup() {
   //初始化串口
@@ -46,7 +47,7 @@ void setup() {
   */
   rgbDriver.begin(/*clockPin=*/CLK_PIN, /*dataPin=*/DATA_PIN);
   /**
-   * @brief 设置灰阶为16位，值为3（二进制表示为11）
+   * @brief 设置灰阶为16位，值为3，
    * @param temp 保留位元
    * @param hspd 输出电流反应速度选择
    * @param bs  灰阶选择
@@ -57,17 +58,33 @@ void setup() {
    * @param cntset 自动更换画面模式或强制更换画面模式选择
    * @param onest 画面重复显示或只亮一次选择
    */
-   rgbDriver.setMode(/*temp=*/0, /*hspd=*/1, /*bs=*/3, /*gck=*/1, /*sep=*/1, /*osc=*/0, /*pol=*/0, /*cntset=*/0, /*onest=*/0);
+   rgbDriver.setMode(/*temp=*/0, /*hspd=*/0, /*bs=*/3, /*gck=*/0, /*sep=*/1, /*osc=*/0, /*pol=*/0, /*cntset=*/0, /*onest=*/0);
 }
 
 void loop() {
-   /**
-   * @brief 设置某个灯的颜色，这里将B3号引脚上的灯的亮度，如果灰阶选择为16位，将会观察到亮度变化
-   * @param ledNo 设置的灯的编号，一共四路/颗灯，取值0~3
-   * @param R     设置RGB红色分量，硬件应连接引脚B，取值范围0~0xffff
+  //这里将A3B3C3引脚上的灯的亮度，如果灰阶选择为16位，将会观察到四种亮度变化
+  /**
+   * @brief 用宏定义指定引脚并控制引脚上单色灯的亮度
+   * @param pinNo        宏定义引脚名
+   * @param brightness   设置亮度，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
   */
-  rgbDriver.setSingleColorLeds(/*pinNo=*/B3, /*brightness=*/0xffff);
+  rgbDriver.setSingleColorLeds(/*pinNo=*/A3|B3|C3, /*brightness=*/0xffff);
   delay(1000);
-  rgbDriver.setSingleColorLeds(/*pinNo=*/B3, /*brightness=*/0xff);
+  rgbDriver.setSingleColorLeds(/*pinNo=*/A3|B3|C3, /*brightness=*/0xfff);
+  delay(1000);
+  rgbDriver.setSingleColorLeds(/*pinNo=*/A3|B3|C3, /*brightness=*/0xff);
+  delay(1000);
+  rgbDriver.setSingleColorLeds(/*pinNo=*/A3|B3|C3, /*brightness=*/0xf);
+  delay(1000);
+  /**
+   * @brief 指定LED灯，并通过RGB各分量控制颜色  
+   * @param ledNo 宏定义灯名，一共四路/颗灯，LED0~LED3
+   * @param R     设置RGB红色分量，硬件应连接引脚B，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
+   * @param G     设置RGB绿色分量，硬件应连接引脚A，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
+   * @param B     设置RGB蓝色分量，硬件应连接引脚C，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
+  */
+  rgbDriver.setRgbLeds(/*ledNo=*/LED3,/*R=*/0xff,/*G=*/0xff,/*B=*/0xff);
+  delay(1000);
+  rgbDriver.setRgbLeds(/*ledNo=*/LED3,/*R=*/0xfff,/*G=*/0xfff,/*B=*/0xfff);
   delay(1000);
 }

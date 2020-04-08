@@ -1,6 +1,6 @@
 /*!
  * @file setSingleColorLeds.ino
- * @brief 通过宏定义设置多个指定引脚的亮度，例如（A3+B2+C1+C0）或（A3|B2|C1|C0），控制A3B2C1C0引脚上的灯
+ * @brief 通过宏定义设置多个指定引脚的亮度，这里控制A3和B3，请将两个单色LED灯的负极连在A3和B3引脚，正极接电源
  * @n 本示例支持的主板有ESP8266、FireBeetle-M0、UNO、ESP32、Leonardo 、Mega2560
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
@@ -32,7 +32,7 @@
 DFRobot_MY9221SS rgbDriver; 
 
 /*
- *宏定义引脚名
+ *供用户使用的宏定义引脚名
  *C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3
  */
 void setup() {
@@ -48,7 +48,7 @@ void setup() {
 
 void loop() {
   /**
-   * @brief 点亮A3和B3引脚上的LED灯，用宏定义指定引脚，控制对应引脚的灯亮度
+   * @brief 用宏定义指定引脚并控制引脚上单色灯的亮度
    * @param pinNo        宏定义引脚名
    * @param brightness   设置亮度，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
   */

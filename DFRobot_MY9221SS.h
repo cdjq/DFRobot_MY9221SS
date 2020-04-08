@@ -1,8 +1,10 @@
 /*!
  * @file DFRobot_MY9221SS.h
  * @brief Define the basic structure of class DFRobot_MY9221SS
- * @n
- *
+ * @n 这是一个有12路引脚的LED灯驱动芯片，实现了下面这些功能
+ * @n 控制12路单色LED灯的亮度
+ * @n 控制4路带RGB引脚的LED灯闪烁、亮度和变色，支持12V电源供电的LED灯，最高承受17V
+ * @n 驱动可级联，每次发送命令后，后一个驱动的工作状态会继承前一个驱动工作状态
  * @copyright   Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
  * @author [YeHangYu](hangyu.ye@dfrobot.com)
@@ -24,13 +26,13 @@
 #endif
 
 
-#define LED_PIN_COUNT   12            //芯片的引脚总数
-#define LED_RGB_NO      3             //4组RGB引脚编号0~3
+#define LED_PIN_COUNT   12            //每个芯片的LED引脚总数
+#define LED_RGB_NO      3             //每个芯片4组RGB灯，最大编号
 
 
 class DFRobot_MY9221SS
 {
-  //RGB Driver的各引脚名的宏定义
+  //各引脚名的宏定义
   #define  C0  (1<<0)
   #define  B0  (1<<1)
   #define  A0  (1<<2)
@@ -39,10 +41,16 @@ class DFRobot_MY9221SS
   #define  A1  (1<<5)
   #define  C2  (1<<6)
   #define  B2  (1<<7)
-  #define  A2  (1<<6)
+  #define  A2  (1<<8)
   #define  C3  (1<<9)
   #define  B3  (1<<10)
   #define  A3  (1<<11)
+  //RGB灯的引脚宏定义
+  #define  LED0  (1<<0)
+  #define  LED1  (1<<1)
+  #define  LED2  (1<<2)
+  #define  LED3  (1<<3)
+
 public:
   /*
   *设置芯片模式的CMD数据格式
@@ -85,15 +93,15 @@ public:
 
   /**
    *@brief 发送16位CMD命令
-   *@param bits 16位数据
+   *@param cmd 16位数据
    */
-  void sendCmd(uint16_t bits);
+  void sendCmd(uint16_t cmd);
 
   /**
-   *@brief 每次调用发送16位数据
-   *@param bits 16位数据
+   *@brief 发送16位数据
+   *@param data 16位数据
    */
-  void sendData(uint16_t bits);
+  void sendData(uint16_t data);
 
   /**
    *@brief 设置模式
@@ -108,45 +116,35 @@ public:
    *@param onest 画面重复显示或只亮一次选择
    */
   void setMode(uint8_t temp=0, uint8_t hspd=0, uint8_t bs=0,\
-               uint8_t gck=1, uint8_t sep=1, uint8_t osc=0,\
+               uint8_t gck=0, uint8_t sep=1, uint8_t osc=0,\
                uint8_t pol=0, uint8_t cntset=0, uint8_t onest=0);
 
   /**
-   *@brief 发送全部208位数据
-   *@param buf 指向192bit灰阶数据的指针，从控制引脚A3的16bit数据开始发送
+   *@brief 发送全部208位数据，数组的元素从11到0分别控制引脚C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3
+   *@param buf 指向192bit灰阶数据的指针
    */
   void write(uint16_t* buf);
 
   /**
-   * @brief 设置某个灯的RGB颜色，4号灯对应引脚A3B3C3
-   * @param ledNo 设置的灯的编号，一共四路/颗灯，取值1~4
+   * @brief 指定LED灯，并通过RGB各分量控制颜色  
+   * @param ledNo 宏定义灯名，一共四路/颗灯，LED0~LED3
    * @param R     设置RGB红色分量，硬件应连接引脚B，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
-   * @param G     设置RGB绿色分量，硬件应连接引脚C，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
-   * @param B     设置RGB蓝色分量，硬件应连接引脚A，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
+   * @param G     设置RGB绿色分量，硬件应连接引脚A，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
+   * @param B     设置RGB蓝色分量，硬件应连接引脚C，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
   */
-  void setLedColor(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B);
+  void setRgbLeds(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B);
 
   /**
-   * @brief 设置所有灯的RGB颜色
-   * @param R     设置RGB红色分量，硬件应连接引脚B，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
-   * @param G     设置RGB绿色分量，硬件应连接引脚C，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
-   * @param B     设置RGB蓝色分量，硬件应连接引脚A，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
-  */
-  void setAllLed(uint16_t R, uint16_t G, uint16_t B);
-
-  /**
-   * @brief 点亮所有灯，RGB颜色随机
-  */
-  void autoColorChange(void);
-
-  /**
-   * @brief 用宏定义，指定引脚并控制对应单色灯的亮度
-   * @param pinNo        宏定义引脚名
-   * @param brightness   设置亮度，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
+   * @brief 用宏定义指定引脚并控制引脚上单色灯的亮度
+   * @param pinNo      宏定义引脚名
+   * @param brightness 设置亮度，8位灰阶数据模式取值范围为0~255，16位时取值范围0~65535
   */
   void setSingleColorLeds(uint16_t pinNo, uint16_t brightness);
 
-
+  /**
+   * @brief 颜色随机，渐亮渐灭一次
+  */
+  void autoColorChange(void);
 
 private:
   uint16_t _mode;
