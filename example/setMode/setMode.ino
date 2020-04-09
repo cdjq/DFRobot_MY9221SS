@@ -1,6 +1,6 @@
 /*!
  * @file setMode.ino
- * @brief 设置模式示例，选择灰阶为16位替换掉默认的8位模式，灯的负极连接A3B3C3中的任意引脚，正极接电源，会观察到四个不同的亮度变化
+ * @brief 设置模式示例，选择灰阶模式为16位替换掉默认的8位模式，灯的负极连接A3B3C3中的任意引脚，正极接电源，会观察到四个不同的亮度变化
  * @n 本示例支持的主板有ESP8266、FireBeetle-M0、UNO、ESP32、Leonardo 、Mega2560
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
@@ -62,7 +62,7 @@ void setup() {
 }
 
 void loop() {
-  //这里将A3B3C3引脚上的灯的亮度，如果灰阶选择为16位，将会观察到四种亮度变化
+  //如果灰阶选择为16位，将会观察到四种亮度变化，请将两个RGB灯的引脚按G、R、B的顺序连接A3、B3、C3
   /**
    * @brief 用宏定义指定引脚并控制引脚上单色灯的亮度
    * @param pinNo        宏定义引脚名，用“+”或“|”连接
@@ -85,7 +85,7 @@ void loop() {
   rgbDriver.latch();
   delay(1000);
   /**
-   * @brief 指定LED灯，并通过RGB各分量控制颜色  
+   * @brief 用宏定义指定LED灯，并通过RGB各分量控制颜色  
    * @param ledNo 宏定义灯名，一共四路/颗灯，LED0~LED3
    * @param R     设置RGB红色分量，硬件应连接引脚B，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
    * @param G     设置RGB绿色分量，硬件应连接引脚A，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535

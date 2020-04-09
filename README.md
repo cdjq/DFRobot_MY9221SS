@@ -84,7 +84,7 @@ To use this library, first download the library file, paste it into the \Arduino
   void latch();
 
   /**
-   * @brief 指定LED灯，并通过RGB各分量控制颜色  
+   * @brief 用宏定义指定LED灯，并通过RGB各分量控制颜色  
    * @param ledNo 宏定义灯名，一共四路/颗灯，LED0~LED3
    * @param R     设置RGB红色分量，硬件应连接引脚B，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
    * @param G     设置RGB绿色分量，硬件应连接引脚A，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
