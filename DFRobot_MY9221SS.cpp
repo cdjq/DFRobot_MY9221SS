@@ -37,7 +37,6 @@ void DFRobot_MY9221SS::sendCmd(uint16_t cmd)//发送16位CMD命令
 }
 void DFRobot_MY9221SS::sendData(uint16_t data)//每次调用发送16位数据
 {
-  //16位全亮无法识别
   for (uint8_t i = 0, polar = 1; i < 16; i++) {
     digitalWrite(_dataPin, data & 0x8000 ? HIGH : LOW);//数据发送
     digitalWrite(_clockPin, polar);//时钟上升沿下降沿，数据有效
