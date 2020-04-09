@@ -45,7 +45,7 @@ To use this library, first download the library file, paste it into the \Arduino
   void begin(uint32_t clockPin, uint32_t dataPin);
 
   /**
-   *@brief 发送16位CMD命令
+   *@brief 发送16位命令
    *@param cmd 16位数据
    */
   void sendCmd(uint16_t cmd);
@@ -68,15 +68,20 @@ To use this library, first download the library file, paste it into the \Arduino
    *@param cntset 自动更换画面模式或强制更换画面模式选择
    *@param onest 画面重复显示或只亮一次选择
    */
-  void setMode(uint8_t temp=0, uint8_t hspd=1, uint8_t bs=0,\
-               uint8_t gck=0, uint8_t sep=0, uint8_t osc=0, \
+  void setMode(uint8_t temp=0, uint8_t hspd=0, uint8_t bs=0,\
+               uint8_t gck=0, uint8_t sep=1, uint8_t osc=0,\
                uint8_t pol=0, uint8_t cntset=0, uint8_t onest=0);
 
   /**
-   *@brief 发送全部数据
+   *@brief 发送全部数据，数组的元素从11到0分别控制引脚C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3
    *@param buf 指向192bit灰阶数据的指针
    */
   void write(uint16_t* buf);
+
+  /**
+   *@brief 发送锁存信号使所有驱动工作，所有数据发送完后，最先发送的一组数据控制级联的最远的一个驱动，最后发送的一组数据控制与主控相连的驱动
+   */
+  void latch();
 
   /**
    * @brief 指定LED灯，并通过RGB各分量控制颜色  
@@ -88,16 +93,16 @@ To use this library, first download the library file, paste it into the \Arduino
   void setRgbLed(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B);
 
   /**
-   * @brief 点亮所有灯，RGB颜色随机
+   * @brief 用宏定义指定引脚并控制引脚上单色灯的亮度
+   * @param pinNo      宏定义引脚名
+   * @param brightness 亮度，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
   */
-  void autoColorChange(void);
+  void setMonochromeLed(uint16_t pinNo, uint16_t brightness);
 
   /**
-   * @brief 用宏定义指定引脚并控制引脚上单色灯的亮度
-   * @param pinNo        宏定义引脚名，用“+”或“|”连接
-   * @param brightness   设置亮度，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
+   * @brief 颜色随机，渐亮渐灭一次
   */
-  void setMonochromeLed(uint16_t pinNo, uint16_t brightness); 
+  void autoColorChange(void);
 ```
 
 ## Compatibility

@@ -60,7 +60,7 @@ void DFRobot_MY9221SS::setMode(uint8_t temp, uint8_t hspd, uint8_t bs, \
   mode.cntset = cntset;
   mode.onest = onest;
   _mode = *((uint16_t*)&mode);
-  _bsMask = (mode.bs == 3) ? 0xffff : 0xff;
+  _bsMask = (mode.bs == 3) ? 0xffff : 0xff;//判断灰阶模式并设置相应的掩码
 }
 
 

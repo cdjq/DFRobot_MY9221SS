@@ -16,6 +16,7 @@ begin	KEYWORD2
 sendCmd	KEYWORD2
 sendData	KEYWORD2
 write	KEYWORD2
+latch	KEYWORD2
 setMode	KEYWORD2
 setRgbLed	KEYWORD2
 autoColorChange	KEYWORD2
