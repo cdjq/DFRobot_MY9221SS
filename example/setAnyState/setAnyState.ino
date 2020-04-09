@@ -1,7 +1,7 @@
 /*!
  * @file setAnyState.ino
  * @brief 用数组控制引脚状态，可设置任意驱动的任何状态。用数组存放12个灰阶数据，数组的元素从0到11分别控制引脚A3 B3 C3 A2 B2 C2 A1 B1 C1 A0 B0 C0
- * @n 基色B对应引脚A0~A3、基色R对应引脚B0~B3、基色G对应引脚C0~C3，请将RGB灯的引脚按GRB顺序连接Ax、Bx、Cx
+ * @n 请将12颗单色LED灯的负极连在12个ABC引脚上，正极接上电源；如果使用RGB灯，请将RGB引脚连接在一组Ax、Bx、Cx，本示例将基色B对应引脚A0~A3、基色R对应引脚B0~B3、基色G对应引脚C0~C3
  * @n 本示例支持的主板有ESP8266、FireBeetle-M0、UNO、ESP32、Leonardo 、Mega2560
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
@@ -46,7 +46,7 @@ void setup() {
 
 
 void loop() {
-  //点亮所有灯，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
+  //点亮最近一个驱动的所有灯，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
   uint16_t  buf[12]={/*A3*/255,/*B3*/255,/*C3*/255,
                      /*A2*/255,/*B2*/255,/*C2*/255,
                      /*A1*/255,/*B1*/255,/*C1*/255,
@@ -71,7 +71,7 @@ void loop() {
   rgbDriver.latch();
   delay(1000);
 
-  //同时点亮所有灯，由A0B0C0到A3B3C3呈逐渐变亮
+  //同时点亮最近一个驱动的所有灯，由A0B0C0到A3B3C3呈逐渐变亮
   for(uint16_t i = 0, brightness = 1; i <= 11; i+=3) {
     buf[i] = brightness;
     buf[i+1] = brightness;
@@ -83,12 +83,23 @@ void loop() {
   rgbDriver.latch();
   delay(5000);
 
-  //同时点亮所有灯，由A0B0C0到A3B3C3呈逐渐变亮
+  //控制级联的第二个驱动的所有灯变为蓝色
+  //使用2个驱动串联，可观察到LED变蓝色现象。将DO连接下一个驱动的D，将DC连接下一个驱动的C，最后接上正负极使用
   for(uint16_t i = 0, brightness = 1; i <= 11; i+=3) {
-    buf[i] = brightness;
-    buf[i+1] = brightness;
-    buf[i+2] = brightness;
-    brightness += 50;
+    buf[i] = 0;
+    buf[i+1] = 0;
+    buf[i+2] = 255;
   }
+  rgbDriver.write(buf);//发送控制
+  //控制级联的最近一个驱动的所有灯变为绿色
+  for(uint16_t i = 0, brightness = 1; i <= 11; i+=3) {
+    buf[i] = 255;
+    buf[i+1] = 0;
+    buf[i+2] = 0;
+  }
+  rgbDriver.write(buf);
+  //发送锁存信号使所有驱动工作
+  rgbDriver.latch();
+  delay(5000);
 }
 

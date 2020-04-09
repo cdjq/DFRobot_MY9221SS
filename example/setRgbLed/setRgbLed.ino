@@ -1,6 +1,6 @@
 /*!
  * @file setRgbLed.ino
- * @brief 用RGB值设置指定LED灯的颜色，点亮所有灯，请将RGB灯的引脚连接Ax、Bx、Cx
+ * @brief 用RGB值设置指定LED灯的颜色，点亮最近一个驱动的所有灯，请将RGB灯的引脚连接Ax、Bx、Cx
  * @n 基色G对应引脚A0~A3、基色R对应引脚B0~B3、基色B对应引脚C0~C3
  * @n 本示例支持的主板有ESP8266、FireBeetle-M0、UNO、ESP32、Leonardo 、Mega2560
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
