@@ -66,34 +66,64 @@ void loop() {
    * @param G     设置RGB绿色分量，硬件应连接引脚A，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
    * @param B     设置RGB蓝色分量，硬件应连接引脚C，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
   */
-  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xff,/*G=*/0,/*B=*/0 );
-  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xf,/*G=*/0,/*B=*/0 );
+  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xff,/*G=*/0,/*B=*/0);
+  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xf, /*G=*/0,/*B=*/0);
   //发送锁存信号使所有驱动工作
   rgbDriver.latch();
   delay(1000);
-  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0,/*G=*/0xff,/*B=*/0 );
-  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0,/*G=*/0xf,/*B=*/0 );
+  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0,/*G=*/0xff,/*B=*/0);
+  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0,/*G=*/0xf, /*B=*/0);
   //发送锁存信号使所有驱动工作
   rgbDriver.latch();
   delay(1000);
-  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0,/*G=*/0,/*B=*/0xff );
+  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0,/*G=*/0,/*B=*/0xff);
   rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0,/*G=*/0,/*B=*/0xf );
   //发送锁存信号使所有驱动工作
   rgbDriver.latch();
   delay(1000);
-  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0,/*G=*/0xff,/*B=*/0xff );
-  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0,/*G=*/0xf,/*B=*/0xf );
+  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0,/*G=*/0xff,/*B=*/0xff);
+  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0,/*G=*/0xf, /*B=*/0xf );
   //发送锁存信号使所有驱动工作
   rgbDriver.latch();
   delay(1000);
-  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xff,/*G=*/0,/*B=*/0xff );
-  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xf,/*G=*/0,/*B=*/0xf );
+  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xff,/*G=*/0,/*B=*/0xff);
+  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xf, /*G=*/0,/*B=*/0xf );
   //发送锁存信号使所有驱动工作
   rgbDriver.latch();
   delay(1000);
-  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xff,/*G=*/0xff,/*B=*/0 );
-  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xf,/*G=*/0xf,/*B=*/0 );
+  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xff,/*G=*/0xff,/*B=*/0);
+  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xf, /*G=*/0xf, /*B=*/0);
   //发送锁存信号使所有驱动工作
   rgbDriver.latch();
   delay(1000);
+
+  /**
+  * @brief 设置灰阶为16位，其值为3
+  * @param temp 保留位元
+  * @param hspd 输出电流反应速度选择
+  * @param bs  灰阶选择
+  * @param gck 内置灰阶时钟频率选择
+  * @param sep 输出电流打散与不打散选择
+  * @param osc 灰阶时钟频率来源选择
+  * @param pol 输出电流极性选择
+  * @param cntset 自动更换画面模式或强制更换画面模式选择
+  * @param onest 画面重复显示或只亮一次选择
+  */
+  rgbDriver.setMode(/*temp=*/0, /*hspd=*/0, /*bs=*/3, /*gck=*/0, /*sep=*/1, /*osc=*/0, /*pol=*/0, /*cntset=*/0, /*onest=*/0);
+  //模式不同，灯的亮度不一样
+  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0x1,/*G=*/0x1,/*B=*/0x1);
+  //设置灰阶模式为8位
+  rgbDriver.setMode(/*temp=*/0, /*hspd=*/0, /*bs=*/0, /*gck=*/0, /*sep=*/1, /*osc=*/0, /*pol=*/0, /*cntset=*/0, /*onest=*/0);
+  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0x1,/*G=*/0x1,/*B=*/0x1);
+  //发送锁存信号使所有驱动工作
+  rgbDriver.latch();
+  delay(5000);
+  
+  //模式相同，灯的亮度一样
+  rgbDriver.setMode(/*temp=*/0, /*hspd=*/0, /*bs=*/3, /*gck=*/0, /*sep=*/1, /*osc=*/0, /*pol=*/0, /*cntset=*/0, /*onest=*/0);
+  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0x1,/*G=*/0x1,/*B=*/0x1);
+  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0x1,/*G=*/0x1,/*B=*/0x1);
+  //发送锁存信号使所有驱动工作
+  rgbDriver.latch();
+  delay(5000);
 }

@@ -47,18 +47,18 @@ void setup() {
   */
   rgbDriver.begin(/*clockPin=*/CLK_PIN, /*dataPin=*/DATA_PIN);
   /**
-   * @brief 设置灰阶为16位，值为3，
-   * @param temp 保留位元
-   * @param hspd 输出电流反应速度选择
-   * @param bs  灰阶选择
-   * @param gck 内置灰阶时钟频率选择
-   * @param sep 输出电流打散与不打散选择
-   * @param osc 灰阶时钟频率来源选择
-   * @param pol 输出电流极性选择
-   * @param cntset 自动更换画面模式或强制更换画面模式选择
-   * @param onest 画面重复显示或只亮一次选择
-   */
-   rgbDriver.setMode(/*temp=*/0, /*hspd=*/0, /*bs=*/3, /*gck=*/0, /*sep=*/1, /*osc=*/0, /*pol=*/0, /*cntset=*/0, /*onest=*/0);
+  * @brief 设置灰阶为16位，其值为3
+  * @param temp 保留位元
+  * @param hspd 输出电流反应速度选择
+  * @param bs  灰阶选择
+  * @param gck 内置灰阶时钟频率选择
+  * @param sep 输出电流打散与不打散选择
+  * @param osc 灰阶时钟频率来源选择
+  * @param pol 输出电流极性选择
+  * @param cntset 自动更换画面模式或强制更换画面模式选择
+  * @param onest 画面重复显示或只亮一次选择
+  */
+  rgbDriver.setMode(/*temp=*/0, /*hspd=*/0, /*bs=*/3, /*gck=*/0, /*sep=*/1, /*osc=*/0, /*pol=*/0, /*cntset=*/0, /*onest=*/0);
 }
 
 void loop() {
