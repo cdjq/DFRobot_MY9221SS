@@ -120,7 +120,7 @@ public:
                uint8_t pol=0, uint8_t cntset=0, uint8_t onest=0);
 
   /**
-   *@brief 发送全部数据，数组的元素从11到0分别控制引脚C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3
+   *@brief 发送一组完整的数据，数组的元素从11到0分别控制引脚C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3
    *@param buf 指向192bit灰阶数据的指针
    */
   void write(uint16_t* buf);
@@ -131,7 +131,7 @@ public:
   void latch();
 
   /**
-   * @brief 用宏定义指定LED灯，并通过RGB各分量控制颜色  
+   * @brief 用宏定义指定LED灯，并通过RGB各分量控制颜色，向芯片发送一组完整的数据
    * @param ledNo 宏定义灯名，一共四路/颗灯，LED0~LED3
    * @param R     设置RGB红色分量，硬件应连接引脚B，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
    * @param G     设置RGB绿色分量，硬件应连接引脚A，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
@@ -140,7 +140,7 @@ public:
   void setRgbLed(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B);
 
   /**
-   * @brief 用宏定义指定引脚并控制引脚上单色灯的亮度
+   * @brief 用宏定义指定引脚并控制引脚上单色灯的亮度，向芯片发送一组完整的数据
    * @param pinNo      宏定义引脚名
    * @param brightness 亮度，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
   */

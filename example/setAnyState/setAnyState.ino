@@ -1,6 +1,7 @@
 /*!
  * @file setAnyState.ino
- * @brief 用数组控制引脚状态，可设置任何状态。用数组存放12个灰阶数据，数组的元素从11到0分别控制引脚C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3
+ * @brief 用数组控制引脚状态，可设置任意驱动的任何状态。用数组存放12个灰阶数据，数组的元素从0到11分别控制引脚A3 B3 C3 A2 B2 C2 A1 B1 C1 A0 B0 C0
+ * @n 基色B对应引脚A0~A3、基色R对应引脚B0~B3、基色G对应引脚C0~C3，请将RGB灯的引脚按GRB顺序连接Ax、Bx、Cx
  * @n 本示例支持的主板有ESP8266、FireBeetle-M0、UNO、ESP32、Leonardo 、Mega2560
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
@@ -26,7 +27,7 @@
 #define CLK_PIN    3
 #endif
 
-/**
+/** 
  * @brief Constructor LED驱动构造函数
  */
 DFRobot_MY9221SS rgbDriver; 
@@ -51,7 +52,7 @@ void loop() {
                      /*A1*/255,/*B1*/255,/*C1*/255,
                      /*A0*/255,/*B0*/255,/*C0*/255};
   /**
-   *@brief 发送全部数据，数组的元素从11到0分别控制引脚C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3
+   *@brief 发送一组完整的数据，数组的元素从0到11分别控制引脚A3 B3 C3 A2 B2 C2 A1 B1 C1 A0 B0 C0
    *@param buf 指向192bit灰阶数据的指针
    */
   rgbDriver.write(buf);
@@ -61,23 +62,33 @@ void loop() {
 
   //将所有A号引脚设置为较暗，所有B号引脚设置为较亮，所有C号引脚设置为亮
   for(uint16_t i = 0; i <= 11; i+=3) {
-    buf[i] = 1;
-    buf[i+1] = 64;
-    buf[i+2] = 255;
+    buf[i] = 1;     //A
+    buf[i+1] = 64;  //B
+    buf[i+2] = 255; //C
   }
   rgbDriver.write(buf);
   //发送锁存信号使所有驱动工作
   rgbDriver.latch();
   delay(1000);
 
-  //同时点亮所有灯，由C0到A3呈逐渐变亮
-  for(uint16_t i = 0, brightness = 20; i <= 11; i++) {
+  //同时点亮所有灯，由A0B0C0到A3B3C3呈逐渐变亮
+  for(uint16_t i = 0, brightness = 1; i <= 11; i+=3) {
     buf[i] = brightness;
-    brightness += 20;
+    buf[i+1] = brightness;
+    buf[i+2] = brightness;
+    brightness += 50;
   }
   rgbDriver.write(buf);
   //发送锁存信号使所有驱动工作
   rgbDriver.latch();
-  delay(1000);
+  delay(5000);
+
+  //同时点亮所有灯，由A0B0C0到A3B3C3呈逐渐变亮
+  for(uint16_t i = 0, brightness = 1; i <= 11; i+=3) {
+    buf[i] = brightness;
+    buf[i+1] = brightness;
+    buf[i+2] = brightness;
+    brightness += 50;
+  }
 }
 
