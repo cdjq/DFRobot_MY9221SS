@@ -65,16 +65,24 @@ void loop() {
   //这里将A3B3C3引脚上的灯的亮度，如果灰阶选择为16位，将会观察到四种亮度变化
   /**
    * @brief 用宏定义指定引脚并控制引脚上单色灯的亮度
-   * @param pinNo        宏定义引脚名
+   * @param pinNo        宏定义引脚名，用“+”或“|”连接
    * @param brightness   设置亮度，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
   */
-  rgbDriver.setSingleColorLeds(/*pinNo=*/A3|B3|C3, /*brightness=*/0xffff);
+  rgbDriver.setMonochromeLed(/*pinNo=*/A3|B3|C3, /*brightness=*/0xffff);
+  //发送锁存信号使所有驱动工作
+  rgbDriver.latch();
   delay(1000);
-  rgbDriver.setSingleColorLeds(/*pinNo=*/A3|B3|C3, /*brightness=*/0xfff);
+  rgbDriver.setMonochromeLed(/*pinNo=*/A3|B3|C3, /*brightness=*/0xfff);
+  //发送锁存信号使所有驱动工作
+  rgbDriver.latch();
   delay(1000);
-  rgbDriver.setSingleColorLeds(/*pinNo=*/A3|B3|C3, /*brightness=*/0xff);
+  rgbDriver.setMonochromeLed(/*pinNo=*/A3|B3|C3, /*brightness=*/0xff);
+  //发送锁存信号使所有驱动工作
+  rgbDriver.latch();
   delay(1000);
-  rgbDriver.setSingleColorLeds(/*pinNo=*/A3|B3|C3, /*brightness=*/0xf);
+  rgbDriver.setMonochromeLed(/*pinNo=*/A3|B3|C3, /*brightness=*/0xf);
+  //发送锁存信号使所有驱动工作
+  rgbDriver.latch();
   delay(1000);
   /**
    * @brief 指定LED灯，并通过RGB各分量控制颜色  
@@ -83,8 +91,12 @@ void loop() {
    * @param G     设置RGB绿色分量，硬件应连接引脚A，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
    * @param B     设置RGB蓝色分量，硬件应连接引脚C，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
   */
-  rgbDriver.setRgbLeds(/*ledNo=*/LED3,/*R=*/0xff,/*G=*/0xff,/*B=*/0xff);
+  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xff,/*G=*/0xff,/*B=*/0xff);
+  //发送锁存信号使所有驱动工作
+  rgbDriver.latch();
   delay(1000);
-  rgbDriver.setRgbLeds(/*ledNo=*/LED3,/*R=*/0xfff,/*G=*/0xfff,/*B=*/0xfff);
+  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xfff,/*G=*/0xfff,/*B=*/0xfff);
+  //发送锁存信号使所有驱动工作
+  rgbDriver.latch();
   delay(1000);
 }

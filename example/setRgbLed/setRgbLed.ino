@@ -1,5 +1,5 @@
 /*!
- * @file setRgbLeds.ino
+ * @file setRgbLed.ino
  * @brief 用RGB值设置指定LED灯的颜色，点亮所有灯，请将RGB灯的引脚连接Ax、Bx、Cx
  * @n 基色G对应引脚A0~A3、基色R对应引脚B0~B3、基色B对应引脚C0~C3
  * @n 本示例支持的主板有ESP8266、FireBeetle-M0、UNO、ESP32、Leonardo 、Mega2560
@@ -55,11 +55,17 @@ void loop() {
    * @param G     设置RGB绿色分量，硬件应连接引脚A，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
    * @param B     设置RGB蓝色分量，硬件应连接引脚C，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
   */
-  rgbDriver.setRgbLeds(/*ledNo=*/LED0|LED1|LED2|LED3,/*R=*/1,/*G=*/0,/*B=*/0);
+  rgbDriver.setRgbLed(/*ledNo=*/LED0|LED1|LED2|LED3,/*R=*/1,/*G=*/0,/*B=*/0);
+  //发送锁存信号使所有驱动工作
+  rgbDriver.latch();
   delay(1000);
-  rgbDriver.setRgbLeds(/*ledNo=*/LED0|LED1|LED2|LED3,/*R=*/0,/*G=*/1,/*B=*/0);
+  rgbDriver.setRgbLed(/*ledNo=*/LED0|LED1|LED2|LED3,/*R=*/0,/*G=*/1,/*B=*/0);
+  //发送锁存信号使所有驱动工作
+  rgbDriver.latch();
   delay(1000);
-  rgbDriver.setRgbLeds(/*ledNo=*/LED0|LED1|LED2|LED3,/*R=*/0,/*G=*/0,/*B=*/1);
+  rgbDriver.setRgbLed(/*ledNo=*/LED0|LED1|LED2|LED3,/*R=*/0,/*G=*/0,/*B=*/1);
+  //发送锁存信号使所有驱动工作
+  rgbDriver.latch();
   delay(1000);
 }
 

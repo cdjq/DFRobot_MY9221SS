@@ -1,6 +1,6 @@
 # DFRobot_MY9221SS  通过PWM调节的LED灯的驱动库
 DFRobot_MY9221SS是基于MY9221SS芯片的RGB驱动库，其芯片最大可承受17V电压，可以驱动带12V电源线和RGB引脚的LED灯，通过PWM调节灯的红绿蓝三基色的亮度从而组成混色。<br>
-该驱动支持级联，可以将多个驱动串联，驱动可级联，每次发送命令后，后一个驱动的工作状态会继承前一个驱动工作状态。<br>
+该驱动支持级联，可以将多个驱动串联，驱动可级联，每次发送一组数据并锁存后，后一个驱动的工作状态会继承前一个驱动工作状态；每次发送N个数据再锁存可以同时控制离主控最近的N个驱动，未受到控制的远端驱动继承较近一个驱动的状态。<br>
 每个驱动可分别控制4颗大功率LED灯，每颗LED灯可串联多颗。<br>
 该库也可以用于驱动12颗单色灯，通过PWM可分别控制调节每一颗灯的亮度。  <br>
 
@@ -23,7 +23,7 @@ DFRobot_MY9221SS是基于MY9221SS芯片的RGB驱动库，其芯片最大可承�
 
 * 控制12路单色LED灯的亮度 <br>
 * 分别控制4路带RGB和12V电源引脚的LED灯闪烁、亮度和变色. <br>
-* 驱动可级联，后一个驱动会跟随前一个驱动的状态. <br>
+* 驱动可级联，每次发送N个数据再锁存同时控制离主控最近的N个驱动，未受到控制的远端驱动继承较近一个驱动的状态. <br>
 
 ## Installation
 
@@ -85,7 +85,7 @@ To use this library, first download the library file, paste it into the \Arduino
    * @param G     设置RGB绿色分量，硬件应连接引脚A，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
    * @param B     设置RGB蓝色分量，硬件应连接引脚C，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
   */
-  void setRgbLeds(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B);
+  void setRgbLed(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B);
 
   /**
    * @brief 点亮所有灯，RGB颜色随机
@@ -94,10 +94,10 @@ To use this library, first download the library file, paste it into the \Arduino
 
   /**
    * @brief 用宏定义指定引脚并控制引脚上单色灯的亮度
-   * @param pinNo        宏定义引脚名
+   * @param pinNo        宏定义引脚名，用“+”或“|”连接
    * @param brightness   设置亮度，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
   */
-  void setSingleColorLeds(uint16_t pinNo, uint16_t brightness); 
+  void setMonochromeLed(uint16_t pinNo, uint16_t brightness); 
 ```
 
 ## Compatibility

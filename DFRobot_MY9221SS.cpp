@@ -4,7 +4,7 @@
  * @n 这是一个有12路引脚的LED灯驱动芯片，实现了下面这些功能
  * @n 控制12路单色LED灯的亮度
  * @n 控制4路带RGB引脚的LED灯闪烁、亮度和变色，支持12V电源供电的LED灯，最高承受17V
- * @n 驱动可级联，后一个驱动会跟随前一个驱动的状态进行工作
+ * @n 驱动可级联，每次发送N个数据再锁存可以同时控制离主控最近的N个驱动，未受到控制的远端驱动继承较近一个驱动的状态
  * @copyright   Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
  * @author [YeHangYu](hangyu.ye@dfrobot.com)
@@ -61,6 +61,7 @@ void DFRobot_MY9221SS::setMode(uint8_t temp, uint8_t hspd, uint8_t bs, \
   mode.cntset = cntset;
   mode.onest = onest;
   _mode = *((uint16_t*)&mode);
+  _bsMask = (mode.bs == 3) ? 0xffff : 0xff;
 }
 
 
@@ -70,7 +71,10 @@ void DFRobot_MY9221SS::write(uint16_t* buf)//向芯片发送设置命令和灰�
   for (uint8_t i = 0; i < 12; i++) { //发送灰阶数据，从A3引脚的buf开始发
     sendData(buf[i]);
   }
-  //所有数据发送完后发送锁存信号，灰阶资料和命令锁存后才可使LED灯工作
+}
+
+void DFRobot_MY9221SS::latch()//内部栓锁的控制，发送锁存信号使所有驱动工作，所有数据发送完后，最先发送的一组数据控制级联的最远的一个驱动，最后发送的一组数据控制与主控相连的驱动
+{
   digitalWrite(_dataPin, LOW);
   delayMicroseconds(240);//固定延时
   digitalWrite(_dataPin, HIGH);
@@ -84,20 +88,15 @@ void DFRobot_MY9221SS::write(uint16_t* buf)//向芯片发送设置命令和灰�
   delayMicroseconds(1);//Tsop(最小值)必须大于[200ns+N*10ns]，其中 N 为芯片串接数目
 }
 
-void DFRobot_MY9221SS::setRgbLeds(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B)
+
+void DFRobot_MY9221SS::setRgbLed(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B)
 {
   uint16_t  buf[LED_PIN_COUNT];
   for(uint8_t j = 0; j <= LED_RGB_NO; j++) {
     if (ledNo & 0x0008) {//从高位开始判断是否灯被指定
-      if((_mode & 0x300 )== 0x300) {//判断是否是16位灰阶模式
-        buf[3 * j + 0] = G ;
-        buf[3 * j + 1] = R ;
-        buf[3 * j + 2] = B ;
-      } else {
-        buf[3 * j + 0] = G & 0xff;
-        buf[3 * j + 1] = R & 0xff;
-        buf[3 * j + 2] = B & 0xff;
-      }
+      buf[3 * j + 0] = G & _bsMask;
+      buf[3 * j + 1] = R & _bsMask;
+      buf[3 * j + 2] = B & _bsMask;
     } else {
       buf[3 * j + 0] = 0 ;
       buf[3 * j + 1] = 0 ;
@@ -108,66 +107,53 @@ void DFRobot_MY9221SS::setRgbLeds(uint8_t ledNo, uint16_t R, uint16_t G, uint16_
   write(buf);//向芯片写入数据，12个引脚，每个16bit
 }
 
+void DFRobot_MY9221SS::setMonochromeLed(uint16_t pinNo, uint16_t brightness)//设置单色灯，采用12位二进制指定引脚，用宏定义控制对应引脚LED亮度，最高位表示A11，最低位是C0
+{
+  uint16_t  buf[LED_PIN_COUNT];
+  for(uint8_t i = 0; i < LED_PIN_COUNT; i++) {
+    if(pinNo & 0x0800) {//从高位开始判断是否灯被指定
+      buf[i] = brightness & _bsMask;
+    } else {
+      buf[i] = 0;//每次发送数据，未设置的灯默认关闭
+    }
+    pinNo<<=1;
+  }
+  write(buf);//向芯片写入数据，12个引脚，每个16bit
+}
+
 void DFRobot_MY9221SS::autoColorChange(void)//自动渐变随机色
 {
   uint16_t  buf[LED_PIN_COUNT];
-  uint16_t R = rand()%255;
-  uint16_t G = rand()%255;
-  uint16_t B = 255 - (R + G)/2;
-  for(uint8_t bright = 20; bright > 1; bright-=2) {
-    for(uint8_t i = 0; i < LED_PIN_COUNT; i++) {
-      if(i%3 == 0) {
-        buf[i] = G/bright ;
-      } else if(i%3 == 1) {
-        buf[i] = R/bright ;
-      } else if(i%3 == 2) {
-        buf[i] = B/bright ;
-      }
+  uint16_t R = rand()%_bsMask;
+  uint16_t G = rand()%_bsMask;
+  uint16_t B = _bsMask - (R + G)/2;
+  for(uint8_t bright = 20; bright > 1; bright-=2) {//渐亮
+    for(uint8_t i = 0; i < LED_PIN_COUNT; i+=3) {
+      buf[i] = G/bright ;
+      buf[i+1] = R/bright ;
+      buf[i+2] = B/bright ;
     }
     write(buf);
+    //发送锁存信号使所有驱动工作
+    latch();
     delay(50);
   }
-  for(uint8_t bright = 1; bright < 20; bright+=2) {
-    for(uint8_t i = 0; i < LED_PIN_COUNT; i++) {
-      if(i%3 == 0) {
-        buf[i] = G/bright ;
-      } else if(i%3 == 1) {
-        buf[i] = R/bright ;
-      } else if(i%3 == 2) {
-        buf[i] = B/bright ;
-      }
+  for(uint8_t bright = 1; bright < 20; bright+=2) {//渐灭
+    for(uint8_t i = 0; i < LED_PIN_COUNT; i+=3) {
+      buf[i] = G/bright ;
+      buf[i+1] = R/bright ;
+      buf[i+2] = B/bright ;
     }
     write(buf);
+    //发送锁存信号使所有驱动工作
+    latch();
     delay(100);
   }
-  for(uint8_t i = 0; i < LED_PIN_COUNT; i++) {
+  for(uint8_t i = 0; i < LED_PIN_COUNT; i++) {//熄灭
     buf[i] = 0 ;
   }
   write(buf);
+  //发送锁存信号使所有驱动工作
+  latch();
 }
 
-void DFRobot_MY9221SS::setSingleColorLeds(uint16_t pinNo, uint16_t brightness)//改用12位二进制指定引脚，用宏定义控制对应引脚LED亮度，最高位表示A11，最低位是C0
-{
-  uint16_t  buf[LED_PIN_COUNT];
-  if((_mode & 0x300 )== 0x300) {//判断是否是16位灰阶模式
-    for(uint8_t i = 0; i < LED_PIN_COUNT; i++) {
-      if(pinNo & 0x0800) {
-        buf[i] = brightness ;
-      } else {
-        buf[i] = 0;//每次发送数据，未设置的灯默认关闭
-      }
-      pinNo<<=1;
-    }
-    write(buf);//向芯片写入数据，12个引脚，每个16bit
-  } else {
-    for(uint8_t i = 0; i < LED_PIN_COUNT; i++) {
-      if(pinNo & 0x0800) {//从高位开始判断是否灯被指定
-        buf[i] = brightness & 0xff;
-      } else {
-        buf[i] = 0;//每次发送数据，未设置的灯默认关闭
-      }
-      pinNo<<=1;
-    }
-    write(buf);//向芯片写入数据，12个引脚，每个16bit
-  }
-}

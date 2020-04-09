@@ -4,7 +4,7 @@
  * @n 这是一个有12路引脚的LED灯驱动芯片，实现了下面这些功能
  * @n 控制12路单色LED灯的亮度
  * @n 控制4路带RGB引脚的LED灯闪烁、亮度和变色，支持12V电源供电的LED灯，最高承受17V
- * @n 驱动可级联，每次发送命令后，后一个驱动的工作状态会继承前一个驱动工作状态
+ * @n 驱动可级联，每次发送N个数据再锁存可以同时控制离主控最近的N个驱动，未受到控制的远端驱动继承较近一个驱动的状态
  * @copyright   Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
  * @author [YeHangYu](hangyu.ye@dfrobot.com)
@@ -126,20 +126,25 @@ public:
   void write(uint16_t* buf);
 
   /**
+   *@brief 发送锁存信号使所有驱动工作，所有数据发送完后，最先发送的一组数据控制级联的最远的一个驱动，最后发送的一组数据控制与主控相连的驱动
+   */
+  void latch();
+
+  /**
    * @brief 指定LED灯，并通过RGB各分量控制颜色  
    * @param ledNo 宏定义灯名，一共四路/颗灯，LED0~LED3
    * @param R     设置RGB红色分量，硬件应连接引脚B，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
    * @param G     设置RGB绿色分量，硬件应连接引脚A，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
    * @param B     设置RGB蓝色分量，硬件应连接引脚C，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
   */
-  void setRgbLeds(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B);
+  void setRgbLed(uint8_t ledNo, uint16_t R, uint16_t G, uint16_t B);
 
   /**
    * @brief 用宏定义指定引脚并控制引脚上单色灯的亮度
    * @param pinNo      宏定义引脚名
-   * @param brightness 设置亮度，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
+   * @param brightness 亮度，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
   */
-  void setSingleColorLeds(uint16_t pinNo, uint16_t brightness);
+  void setMonochromeLed(uint16_t pinNo, uint16_t brightness);
 
   /**
    * @brief 颜色随机，渐亮渐灭一次
@@ -148,6 +153,7 @@ public:
 
 private:
   uint16_t _mode;
+  uint16_t _bsMask;//灰阶位数掩码
   uint32_t _clockPin;
   uint32_t _dataPin;
 };

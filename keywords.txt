@@ -17,9 +17,9 @@ sendCmd	KEYWORD2
 sendData	KEYWORD2
 write	KEYWORD2
 setMode	KEYWORD2
-setRgbLeds	KEYWORD2
+setRgbLed	KEYWORD2
 autoColorChange	KEYWORD2
-setSingleColorLeds	KEYWORD2
+setMonochromeLed	KEYWORD2
               
 #######################################
 # Constants (LITERAL1)

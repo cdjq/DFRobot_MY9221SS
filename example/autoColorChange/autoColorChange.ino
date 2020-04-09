@@ -1,7 +1,6 @@
 /*!
  * @file autoColorChange.ino
- * @brief 所有LED灯颜色随机，渐亮渐灭，使用RGB灯
- * @n 基色G对应引脚A0~A3、基色R对应引脚B0~B3、基色B对应引脚C0~C3
+ * @brief 所有LED灯颜色随机，渐亮渐灭，使用RGB灯，基色G对应引脚A0~A3、基色R对应引脚B0~B3、基色B对应引脚C0~C3，请将RGB灯的引脚按GRB顺序连接Ax、Bx、Cx
  * @n 本示例支持的主板有ESP8266、FireBeetle-M0、UNO、ESP32、Leonardo 、Mega2560
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
