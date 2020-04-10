@@ -1,10 +1,9 @@
 /*!
  * @file cascadeConnection.ino
- * @brief 使两个驱动上的3号LED灯同时呈现相同的颜色，但亮度不同，请将RGB灯的引脚按G、R、B的顺序连接A3、B3、C3
+ * @brief 使两个驱动上的3号LED灯同时呈现相同的颜色，但亮度不同，远端的LED灯更亮，发送一组数据前可以设置模式，本示例对最近的驱动发送命令前修改了它的灰阶模式（从8位变为16位），观察到其亮度明显变暗
+ * @n 基色G对应引脚A0~A3、基色R对应引脚B0~B3、基色B对应引脚C0~C3，请将RGB灯的引脚按G、R、B的顺序连接A3、B3、C3
  * @n 本示例使用2个驱动芯片串联，将DO连接下一个驱动的D，将DC连接下一个驱动的C，最后接上正负极使用
- * @n 基色G对应引脚A0~A3、基色R对应引脚B0~B3、基色B对应引脚C0~C3
- * @n 两个驱动的控制，发送第一次数据控制的是最远的驱动，两个驱动的数据发送完再发送锁存信号，否则远端驱动的状态将继承较近一个驱动的状态
- * @n 本示例使远端的LED灯更亮，发送一组数据前可以设置模式，本示例对最近的驱动发送命令前修改了它的灰阶模式（从8位变为16位），观察到其亮度明显变暗
+ * @n 两个驱动的控制规则是，发送第一次数据控制的是较远的驱动，发送第二次数据控制较近的驱动，两个驱动的数据发送完成后再发送锁存信号，即可使驱动工作。否则远端驱动的状态将继承较近一个驱动的状态
  * @n 本示例支持的主板有ESP8266、FireBeetle-M0、UNO、ESP32、Leonardo 、Mega2560
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
@@ -38,6 +37,8 @@ DFRobot_MY9221SS rgbDriver;
 /*
  *供用户使用的宏定义引脚名
  *C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3
+ *供用户使用的宏定义LED灯名
+ *LED0 LED1 LED2 LED3
  */
 void setup() {
   //初始化串口
@@ -56,8 +57,8 @@ void loop() {
    * @param pinNo        宏定义引脚名，用“+”或“|”连接
    * @param brightness   设置亮度，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
   */
-  rgbDriver.setMonochromeLed(/*pinNo=*/A3|B3|C3, /*brightness=*/0xff);
-  rgbDriver.setMonochromeLed(/*pinNo=*/A3|B3|C3, /*brightness=*/0xf);
+  rgbDriver.setMonochromeLed(/*pinNo=*/A3|B3|C3, /*brightness=*/0xff);//较远驱动上的A3B3C3引脚上的灯
+  rgbDriver.setMonochromeLed(/*pinNo=*/A3|B3|C3, /*brightness=*/0xf); //较近驱动上的A3B3C3引脚上的灯
   //发送锁存信号使所有驱动工作
   rgbDriver.latch();
   delay(1000);
@@ -68,8 +69,8 @@ void loop() {
    * @param G     设置RGB绿色分量，硬件应连接引脚A，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
    * @param B     设置RGB蓝色分量，硬件应连接引脚C，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
   */
-  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xff,/*G=*/0,/*B=*/0);
-  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xf, /*G=*/0,/*B=*/0);
+  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xf, /*G=*/0,/*B=*/0);//较远驱动上的灯
+  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xff,/*G=*/0,/*B=*/0);//较近驱动上的灯
   //发送锁存信号使所有驱动工作
   rgbDriver.latch();
   delay(1000);
@@ -123,8 +124,28 @@ void loop() {
   //模式相同，灯的亮度一样
   //恢复灰阶模式为8位
   rgbDriver.setMode(/*temp=*/0, /*hspd=*/0, /*bs=*/0, /*gck=*/0, /*sep=*/1, /*osc=*/0, /*pol=*/0, /*cntset=*/0, /*onest=*/0);
-  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xf,/*G=*/0xf,/*B=*/0xf);
-  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xf,/*G=*/0xf,/*B=*/0xf);
+  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xf,/*G=*/0xf,/*B=*/0xf);//较近驱动上的灯
+  rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xf,/*G=*/0xf,/*B=*/0xf);//较远驱动上的灯
+  //发送锁存信号使所有驱动工作
+  rgbDriver.latch();
+  delay(5000);
+
+  //使用数组设置任意一个驱动的任意状态
+  uint16_t  buf[12];
+  //控制级联的第二个驱动的所有灯变为蓝色
+  for(uint16_t i = 0, brightness = 1; i <= 11; i+=3) {
+    buf[i] = 0;
+    buf[i+1] = 0;
+    buf[i+2] = 255;
+  }
+  rgbDriver.write(buf);//发送控制
+  //控制级联的最近一个驱动的所有灯变为绿色
+  for(uint16_t i = 0, brightness = 1; i <= 11; i+=3) {
+    buf[i] = 255;
+    buf[i+1] = 0;
+    buf[i+2] = 0;
+  }
+  rgbDriver.write(buf);
   //发送锁存信号使所有驱动工作
   rgbDriver.latch();
   delay(5000);
