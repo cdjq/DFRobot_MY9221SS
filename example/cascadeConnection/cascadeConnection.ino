@@ -59,8 +59,7 @@ void loop() {
   */
   rgbDriver.setMonochromeLed(/*pinNo=*/A3|B3|C3, /*brightness=*/0xff);//较远驱动上的A3B3C3引脚上的灯
   rgbDriver.setMonochromeLed(/*pinNo=*/A3|B3|C3, /*brightness=*/0xf); //较近驱动上的A3B3C3引脚上的灯
-  //发送锁存信号使所有驱动工作
-  rgbDriver.latch();
+  rgbDriver.latch();//发送锁存信号使所有驱动工作
   delay(1000);
   /**
    * @brief 用宏定义指定LED灯，并通过RGB各分量控制颜色，向芯片发送一组完整的数据  
@@ -71,33 +70,27 @@ void loop() {
   */
   rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xf, /*G=*/0,/*B=*/0);//较远驱动上的灯
   rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xff,/*G=*/0,/*B=*/0);//较近驱动上的灯
-  //发送锁存信号使所有驱动工作
-  rgbDriver.latch();
+  rgbDriver.latch();//发送锁存信号使所有驱动工作
   delay(1000);
   rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0,/*G=*/0xff,/*B=*/0);
   rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0,/*G=*/0xf, /*B=*/0);
-  //发送锁存信号使所有驱动工作
-  rgbDriver.latch();
+  rgbDriver.latch();//发送锁存信号使所有驱动工作
   delay(1000);
   rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0,/*G=*/0,/*B=*/0xff);
   rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0,/*G=*/0,/*B=*/0xf );
-  //发送锁存信号使所有驱动工作
-  rgbDriver.latch();
+  rgbDriver.latch();//发送锁存信号使所有驱动工作
   delay(1000);
   rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0,/*G=*/0xff,/*B=*/0xff);
   rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0,/*G=*/0xf, /*B=*/0xf );
-  //发送锁存信号使所有驱动工作
-  rgbDriver.latch();
+  rgbDriver.latch();//发送锁存信号使所有驱动工作
   delay(1000);
   rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xff,/*G=*/0,/*B=*/0xff);
   rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xf, /*G=*/0,/*B=*/0xf );
-  //发送锁存信号使所有驱动工作
-  rgbDriver.latch();
+  rgbDriver.latch();//发送锁存信号使所有驱动工作
   delay(1000);
   rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xff,/*G=*/0xff,/*B=*/0);
   rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xf, /*G=*/0xf, /*B=*/0);
-  //发送锁存信号使所有驱动工作
-  rgbDriver.latch();
+  rgbDriver.latch();//发送锁存信号使所有驱动工作
   delay(1000);
 
 
@@ -117,8 +110,7 @@ void loop() {
   */
   rgbDriver.setMode(/*temp=*/0, /*hspd=*/0, /*bs=*/3, /*gck=*/0, /*sep=*/1, /*osc=*/0, /*pol=*/0, /*cntset=*/0, /*onest=*/0);
   rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xf,/*G=*/0xf,/*B=*/0xf);
-  //发送锁存信号使所有驱动工作
-  rgbDriver.latch();
+  rgbDriver.latch();//发送锁存信号使所有驱动工作
   delay(5000);
   
   //模式相同，灯的亮度一样
@@ -126,8 +118,7 @@ void loop() {
   rgbDriver.setMode(/*temp=*/0, /*hspd=*/0, /*bs=*/0, /*gck=*/0, /*sep=*/1, /*osc=*/0, /*pol=*/0, /*cntset=*/0, /*onest=*/0);
   rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xf,/*G=*/0xf,/*B=*/0xf);//较近驱动上的灯
   rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xf,/*G=*/0xf,/*B=*/0xf);//较远驱动上的灯
-  //发送锁存信号使所有驱动工作
-  rgbDriver.latch();
+  rgbDriver.latch();//发送锁存信号使所有驱动工作
   delay(5000);
 
   //使用数组设置任意一个驱动的任意状态
@@ -138,7 +129,11 @@ void loop() {
     buf[i+1] = 0;
     buf[i+2] = 255;
   }
-  rgbDriver.write(buf);//发送控制
+  /**
+   *@brief 发送一组完整的数据，数组的元素从0到11分别控制引脚A3 B3 C3 A2 B2 C2 A1 B1 C1 A0 B0 C0
+   *@param buf 指向192bit灰阶数据的指针
+   */
+  rgbDriver.write(buf);
   //控制级联的最近一个驱动的所有灯变为绿色
   for(uint16_t i = 0, brightness = 1; i <= 11; i+=3) {
     buf[i] = 255;
@@ -146,7 +141,6 @@ void loop() {
     buf[i+2] = 0;
   }
   rgbDriver.write(buf);
-  //发送锁存信号使所有驱动工作
-  rgbDriver.latch();
+  rgbDriver.latch();//发送锁存信号使所有驱动工作
   delay(5000);
 }

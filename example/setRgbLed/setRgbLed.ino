@@ -56,16 +56,13 @@ void loop() {
    * @param B     设置RGB蓝色分量，硬件应连接引脚C，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
   */
   rgbDriver.setRgbLed(/*ledNo=*/LED0|LED1|LED2|LED3,/*R=*/1,/*G=*/0,/*B=*/0);
-  //发送锁存信号使所有驱动工作
-  rgbDriver.latch();
+  rgbDriver.latch();//发送锁存信号使所有驱动工作
   delay(1000);
   rgbDriver.setRgbLed(/*ledNo=*/LED0|LED1|LED2|LED3,/*R=*/0,/*G=*/1,/*B=*/0);
-  //发送锁存信号使所有驱动工作
-  rgbDriver.latch();
+  rgbDriver.latch();//发送锁存信号使所有驱动工作
   delay(1000);
   rgbDriver.setRgbLed(/*ledNo=*/LED0|LED1|LED2|LED3,/*R=*/0,/*G=*/0,/*B=*/1);
-  //发送锁存信号使所有驱动工作
-  rgbDriver.latch();
+  rgbDriver.latch();//发送锁存信号使所有驱动工作
   delay(1000);
 }
 

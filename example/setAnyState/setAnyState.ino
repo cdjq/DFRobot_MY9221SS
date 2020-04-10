@@ -57,8 +57,7 @@ void loop() {
    *@param buf 指向192bit灰阶数据的指针
    */
   rgbDriver.write(buf);
-  //发送锁存信号使所有驱动工作
-  rgbDriver.latch();
+  rgbDriver.latch();//发送锁存信号使所有驱动工作
   delay(1000);
 
   //将所有A号引脚设置为较暗，所有B号引脚设置为较亮，所有C号引脚设置为亮
@@ -68,11 +67,10 @@ void loop() {
     buf[i+2] = 255; //C
   }
   rgbDriver.write(buf);
-  //发送锁存信号使所有驱动工作
-  rgbDriver.latch();
+  rgbDriver.latch();//发送锁存信号使所有驱动工作
   delay(1000);
 
-  //同时点亮最近一个驱动的所有灯，由A0B0C0到A3B3C3呈逐渐变亮
+  //同时点亮驱动的所有灯，由A0B0C0到A3B3C3呈逐渐变亮
   for(uint16_t i = 0, brightness = 1; i <= 11; i+=3) {
     buf[i] = brightness;
     buf[i+1] = brightness;
@@ -80,8 +78,7 @@ void loop() {
     brightness += 50;
   }
   rgbDriver.write(buf);
-  //发送锁存信号使所有驱动工作
-  rgbDriver.latch();
+  rgbDriver.latch();//发送锁存信号使所有驱动工作
   delay(5000);
 }
 

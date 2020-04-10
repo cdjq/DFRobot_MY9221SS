@@ -69,20 +69,16 @@ void loop() {
    * @param brightness   设置亮度，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
   */
   rgbDriver.setMonochromeLed(/*pinNo=*/A3|B3|C3, /*brightness=*/0xffff);
-  //发送锁存信号使所有驱动工作
-  rgbDriver.latch();
+  rgbDriver.latch();//发送锁存信号使所有驱动工作
   delay(1000);
   rgbDriver.setMonochromeLed(/*pinNo=*/A3|B3|C3, /*brightness=*/0xfff);
-  //发送锁存信号使所有驱动工作
-  rgbDriver.latch();
+  rgbDriver.latch();//发送锁存信号使所有驱动工作
   delay(1000);
   rgbDriver.setMonochromeLed(/*pinNo=*/A3|B3|C3, /*brightness=*/0xff);
-  //发送锁存信号使所有驱动工作
-  rgbDriver.latch();
+  rgbDriver.latch();//发送锁存信号使所有驱动工作
   delay(1000);
   rgbDriver.setMonochromeLed(/*pinNo=*/A3|B3|C3, /*brightness=*/0xf);
-  //发送锁存信号使所有驱动工作
-  rgbDriver.latch();
+  rgbDriver.latch();//发送锁存信号使所有驱动工作
   delay(1000);
   /**
    * @brief 用宏定义指定LED灯，并通过RGB各分量控制颜色，向芯片发送一组完整的数据  
@@ -92,11 +88,9 @@ void loop() {
    * @param B     设置RGB蓝色分量，硬件应连接引脚C，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
   */
   rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xff,/*G=*/0xff,/*B=*/0xff);
-  //发送锁存信号使所有驱动工作
-  rgbDriver.latch();
+  rgbDriver.latch();//发送锁存信号使所有驱动工作
   delay(1000);
   rgbDriver.setRgbLed(/*ledNo=*/LED3,/*R=*/0xfff,/*G=*/0xfff,/*B=*/0xfff);
-  //发送锁存信号使所有驱动工作
-  rgbDriver.latch();
+  rgbDriver.latch();//发送锁存信号使所有驱动工作
   delay(1000);
 }

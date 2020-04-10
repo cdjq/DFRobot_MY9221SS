@@ -53,8 +53,7 @@ void loop() {
    * @param brightness   设置亮度，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
   */
   rgbDriver.setMonochromeLed(/*pinNo=*/A3|B3|C3|A2|B2|C2|A1|B1|C1|A0|B0|C0, /*brightness=*/0);
-  //发送锁存信号使所有驱动工作
-  rgbDriver.latch();
+  rgbDriver.latch();//发送锁存信号使所有驱动工作
   delay(500);
   //逐渐变亮
   for(uint16_t i = 0; i <= 255; i+=5) {
