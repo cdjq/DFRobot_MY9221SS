@@ -30,7 +30,7 @@
 /**
  * @brief Constructor  LED驱动构造函数
  */
-DFRobot_MY9221SS rgbDriver;
+DFRobot_MY9221SS ledDriver;
 
 /*
  *供用户使用的宏定义LED灯名
@@ -44,7 +44,7 @@ void setup() {
   * @param clockPin 时钟引脚
   * @param dataPin  数据引脚
   */
-  rgbDriver.begin(/*clockPin=*/CLK_PIN, /*dataPin=*/DATA_PIN);
+  ledDriver.begin(/*clockPin=*/CLK_PIN, /*dataPin=*/DATA_PIN);
 }
 
 void loop() {
@@ -55,14 +55,14 @@ void loop() {
    * @param G     设置RGB绿色分量，硬件应连接引脚A，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
    * @param B     设置RGB蓝色分量，硬件应连接引脚C，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
   */
-  rgbDriver.setRgbLed(/*ledNo=*/LED0|LED1|LED2|LED3,/*R=*/1,/*G=*/0,/*B=*/0);
-  rgbDriver.latch();//发送锁存信号使所有驱动工作
+  ledDriver.setRgbLed(/*ledNo=*/LED0|LED1|LED2|LED3,/*R=*/100,/*G=*/0,/*B=*/0);
+  ledDriver.latch();//发送锁存信号使所有驱动工作
   delay(1000);
-  rgbDriver.setRgbLed(/*ledNo=*/LED0|LED1|LED2|LED3,/*R=*/0,/*G=*/1,/*B=*/0);
-  rgbDriver.latch();//发送锁存信号使所有驱动工作
+  ledDriver.setRgbLed(/*ledNo=*/LED0+LED1+LED2+LED3,/*R=*/0,/*G=*/100,/*B=*/0);
+  ledDriver.latch();//发送锁存信号使所有驱动工作
   delay(1000);
-  rgbDriver.setRgbLed(/*ledNo=*/LED0|LED1|LED2|LED3,/*R=*/0,/*G=*/0,/*B=*/1);
-  rgbDriver.latch();//发送锁存信号使所有驱动工作
+  ledDriver.setRgbLed(/*ledNo=*/LED0|LED1|LED2|LED3,/*R=*/0,/*G=*/0,/*B=*/100);
+  ledDriver.latch();//发送锁存信号使所有驱动工作
   delay(1000);
 }
 

@@ -1,10 +1,10 @@
 /*!
  * @file DFRobot_MY9221SS.h
  * @brief Define the basic structure of class DFRobot_MY9221SS
- * @n 这是一个有12路引脚的LED灯驱动芯片，实现了下面这些功能
+ * @n 这是一个有12路引脚的LED灯，实现了下面这些功能
  * @n 控制12路单色LED灯的亮度
  * @n 控制4路带RGB引脚的LED灯闪烁、亮度和变色，支持12V电源供电的LED灯，最高承受17V
- * @n 驱动可级联，每次发送N个数据再锁存可以同时控制离主控最近的N个驱动，未受到控制的远端驱动继承较近一个驱动的状态
+ * @n 驱动可级联，每次收到新数据会将旧数据往后传递，每次发送N组数据锁存后可控制N个驱动
  * @copyright   Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
  * @author [YeHangYu](hangyu.ye@dfrobot.com)
@@ -77,6 +77,77 @@ public:
     uint8_t   temp: 5; /*!< Please filled with all “0” */
   } __attribute__ ((packed)) sMode_t;
 
+  /*
+  One-shot select
+  */
+  typedef enum{
+    eRepeat = 0, /**< frame cycle repeat mode */
+    eOneShot = 1, /**< frame cycle One-shot mode (Only usable when cntset = “1”)*/
+  }eOnest_t;
+
+  /*
+  Counter reset select
+  */
+  typedef enum{
+    eFreeRunning = 0, /**< free running mode */
+    eCounterReset = 1, /**< counter reset mode (Only usable when osc = “1”)*/
+  }eCntset_t;
+
+  /*
+  Output polarity select
+  */
+  typedef enum{
+    eLedDriver = 0, /**< work as LED driver */
+    eGenerator = 1, /**< work as MY-PWM/APDM generator */
+  }ePol_t;
+
+  /*
+  Grayscale clock source select
+  */
+  typedef enum{
+    eInternalGCK = 0, /**< internal oscillator (8.6MHz) (internal GCK source) */
+    eExternalGCK = 1, /**< external clock from GCKI pin (external GCK source) */
+  }eOsc_t;
+
+  /*
+  Output waveform select
+  */
+  typedef enum{
+    ePWM = 0, /**< MY-PWM output waveform (similar to traditional waveform) */
+    eAPDM = 1, /**< APDM output waveform */
+  }eSep_t;
+
+  /*
+  Internal oscillator freq select
+  */
+  typedef enum{
+    eOriginalFreq = 0, /**< original freq (8.6MHz) */
+    eFreqDivision2 = 1, /**< original freq/2 */
+    eFreqDivision4 = 2, /**< original freq/4 */
+    eFreqDivision8 = 3, /**< original freq/8 */
+    eFreqDivision16 = 4, /**< original freq/16 */
+    eFreqDivision64 = 5, /**< original freq/64 */
+    eFreqDivision128 = 6, /**< original freq/128 */
+    eFreqDivision256 = 7, /**< original freq/256 */
+  }eGck_t;
+
+  /*
+  Grayscale resolution select
+  */
+  typedef enum{
+    eBit8 = 0, /**< 8-bit grayscale application */
+    eBit12 = 1, /**< 12-bit grayscale application */
+    eBit14 = 2, /**< 14-bit grayscale application */
+    eBit16 = 3, /**< 16-bit grayscale application */
+  }eBs_t;
+
+  /*
+  Iout Tr/Tf select
+  */
+  typedef enum{
+    eIoutSlow = 0, /**< Iout slow mode */
+    eIoutFast = 1, /**< Iout fast mode */
+  }eHspd_t;
 
 public:
   /**
@@ -90,18 +161,6 @@ public:
    *@param dataPin  数据引脚
    */
   void begin(uint32_t clockPin, uint32_t dataPin);
-
-  /**
-   *@brief 发送16位命令
-   *@param cmd 16位数据
-   */
-  void sendCmd(uint16_t cmd);
-
-  /**
-   *@brief 发送16位数据
-   *@param data 16位数据
-   */
-  void sendData(uint16_t data);
 
   /**
    *@brief 设置模式
@@ -121,12 +180,12 @@ public:
 
   /**
    *@brief 发送一组完整的数据，数组的元素从11到0分别控制引脚C0 B0 A0 C1 B1 A1 C2 B2 A2 C3 B3 A3
-   *@param buf 指向192bit灰阶数据的指针
+   *@param buf 12*2字节的数组的首地址
    */
   void write(uint16_t* buf);
 
   /**
-   *@brief 发送锁存信号使所有驱动工作，所有数据发送完后，最先发送的一组数据控制级联的最远的一个驱动，最后发送的一组数据控制与主控相连的驱动
+   *@brief 发送锁存信号使所有驱动工作，所有数据发送完后，最先发送的一组数据控制级联的最后一个驱动，最后发送的一组数据控制与主控相连的驱动
    */
   void latch();
 
@@ -150,6 +209,19 @@ public:
    * @brief 颜色随机，渐亮渐灭一次
   */
   void autoColorChange(void);
+
+private:
+  /**
+   *@brief 发送16位命令
+   *@param cmd 16位数据
+   */
+  void sendCmd(uint16_t cmd);
+
+  /**
+   *@brief 发送16位数据
+   *@param data 16位数据
+   */
+  void sendData(uint16_t data);
 
 private:
   uint16_t _mode;

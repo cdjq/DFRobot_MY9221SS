@@ -4,7 +4,7 @@
  * @n 这是一个有12路引脚的LED灯驱动芯片，实现了下面这些功能
  * @n 控制12路单色LED灯的亮度
  * @n 控制4路带RGB引脚的LED灯闪烁、亮度和变色，支持12V电源供电的LED灯，最高承受17V
- * @n 驱动可级联，每次发送N个数据再锁存可以同时控制离主控最近的N个驱动，未受到控制的远端驱动继承较近一个驱动的状态
+ * @n 驱动可级联，每次收到新数据会将旧数据往后传递，每次发送N组数据锁存后可控制N个驱动
  * @copyright   Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
  * @author [YeHangYu](hangyu.ye@dfrobot.com)

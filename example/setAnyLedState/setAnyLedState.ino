@@ -1,6 +1,6 @@
 /*!
- * @file setAnyState.ino
- * @brief 本示例可设置任意驱动的任何状态，用数组存放12个灰阶数据控制12个引脚，数组的元素从0到11分别控制引脚A3 B3 C3 A2 B2 C2 A1 B1 C1 A0 B0 C0
+ * @file setAnyLedState.ino
+ * @brief 本示例用数组存放12个灰阶数据控制12个引脚，每写入一组数据可控制一个驱动的每个引脚状态，因此支持所有亮灯方案，数组的元素从0到11分别控制引脚A3 B3 C3 A2 B2 C2 A1 B1 C1 A0 B0 C0
  * @n 请将12颗单色LED灯的负极连在12个ABC引脚上，正极接上电源
  * @n 如果使用RGB灯，请将RGB引脚连接在一组ABC上，基色B对应引脚A0~A3、基色R对应引脚B0~B3、基色G对应引脚C0~C3
  * @n 本示例支持的主板有ESP8266、FireBeetle-M0、UNO、ESP32、Leonardo 、Mega2560
@@ -31,7 +31,7 @@
 /** 
  * @brief Constructor LED驱动构造函数
  */
-DFRobot_MY9221SS rgbDriver; 
+DFRobot_MY9221SS ledDriver; 
 
 
 void setup() {
@@ -42,7 +42,7 @@ void setup() {
   * @param clockPin 时钟引脚
   * @param dataPin  数据引脚
   */
-  rgbDriver.begin(/*clockPin=*/CLK_PIN, /*dataPin=*/DATA_PIN);
+  ledDriver.begin(/*clockPin=*/CLK_PIN, /*dataPin=*/DATA_PIN);
 }
 
 
@@ -54,10 +54,10 @@ void loop() {
                      /*A0*/255,/*B0*/255,/*C0*/255};
   /**
    *@brief 发送一组完整的数据，数组的元素从0到11分别控制引脚A3 B3 C3 A2 B2 C2 A1 B1 C1 A0 B0 C0
-   *@param buf 指向192bit灰阶数据的指针
+   *@param buf 12*2字节的数组的首地址
    */
-  rgbDriver.write(buf);
-  rgbDriver.latch();//发送锁存信号使所有驱动工作
+  ledDriver.write(buf);
+  ledDriver.latch();//发送锁存信号使所有驱动工作
   delay(1000);
 
   //将所有A号引脚设置为较暗，所有B号引脚设置为较亮，所有C号引脚设置为亮
@@ -66,19 +66,19 @@ void loop() {
     buf[i+1] = 64;  //B
     buf[i+2] = 255; //C
   }
-  rgbDriver.write(buf);
-  rgbDriver.latch();//发送锁存信号使所有驱动工作
-  delay(1000);
+  ledDriver.write(buf);
+  ledDriver.latch();//发送锁存信号使所有驱动工作
+  delay(5000);
 
   //同时点亮驱动的所有灯，由A0B0C0到A3B3C3呈逐渐变亮
   for(uint16_t i = 0, brightness = 1; i <= 11; i+=3) {
     buf[i] = brightness;
     buf[i+1] = brightness;
     buf[i+2] = brightness;
-    brightness += 50;
+    brightness += 60;
   }
-  rgbDriver.write(buf);
-  rgbDriver.latch();//发送锁存信号使所有驱动工作
+  ledDriver.write(buf);
+  ledDriver.latch();//发送锁存信号使所有驱动工作
   delay(5000);
 }
 

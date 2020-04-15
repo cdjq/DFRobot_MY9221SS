@@ -29,7 +29,7 @@
 /**
  * @brief Constructor LED驱动构造函数
  */
-DFRobot_MY9221SS rgbDriver; 
+DFRobot_MY9221SS ledDriver; 
 
 
 void setup() {
@@ -40,13 +40,13 @@ void setup() {
   * @param clockPin 时钟引脚
   * @param dataPin  数据引脚
   */
-  rgbDriver.begin(/*clockPin=*/CLK_PIN, /*dataPin=*/DATA_PIN);
+  ledDriver.begin(/*clockPin=*/CLK_PIN, /*dataPin=*/DATA_PIN);
 }
 
 void loop() {
   /**
    * @brief 所有灯随机颜色，渐亮渐灭
   */
-  rgbDriver.autoColorChange();
+  ledDriver.autoColorChange();
   delay(2000);
 }

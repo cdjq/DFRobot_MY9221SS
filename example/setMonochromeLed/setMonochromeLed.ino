@@ -29,7 +29,7 @@
 /**
  * @brief Constructor LED驱动构造函数
  */
-DFRobot_MY9221SS rgbDriver; 
+DFRobot_MY9221SS ledDriver; 
 
 /*
  *供用户使用的宏定义引脚名
@@ -43,7 +43,7 @@ void setup() {
   * @param clockPin 时钟引脚
   * @param dataPin  数据引脚
   */
-  rgbDriver.begin(/*clockPin=*/CLK_PIN, /*dataPin=*/DATA_PIN);
+  ledDriver.begin(/*clockPin=*/CLK_PIN, /*dataPin=*/DATA_PIN);
 }
 
 void loop() {
@@ -52,75 +52,69 @@ void loop() {
    * @param pinNo        宏定义引脚名，用“+”或“|”连接
    * @param brightness   设置亮度，8位灰阶数据模式时取值范围为0~255，16位时取值范围为0~65535
   */
-  rgbDriver.setMonochromeLed(/*pinNo=*/A3|B3|C3|A2|B2|C2|A1|B1|C1|A0|B0|C0, /*brightness=*/0);
-  rgbDriver.latch();//发送锁存信号使所有驱动工作
+  ledDriver.setMonochromeLed(/*pinNo=*/A3|B3|C3|A2|B2|C2|A1|B1|C1|A0|B0|C0, /*brightness=*/0);
+  ledDriver.latch();//发送锁存信号使所有驱动工作
   delay(500);
   //逐渐变亮
-  for(uint16_t i = 0; i <= 255; i+=5) {
-    rgbDriver.setMonochromeLed(/*pinNo=*/A3|B3|C3|A2|B2|C2|A1|B1|C1|A0|B0|C0, /*brightness=*/i);
-    //发送锁存信号使所有驱动工作
-    rgbDriver.latch();
-    delay(100);
+  for(uint16_t i = 0; i <= 255; i++) {
+    ledDriver.setMonochromeLed(/*pinNo=*/A3+B3+C3+A2+B2+C2+A1+B1+C1+A0+B0+C0, /*brightness=*/i);
+    ledDriver.latch();//发送锁存信号使所有驱动工作
+    delay(10);
   }
   //逐渐熄灭
-  for(uint16_t i = 255; i > 0; i-=5) {
-    rgbDriver.setMonochromeLed(/*pinNo=*/A3|B3|C3|A2|B2|C2|A1|B1|C1|A0|B0|C0, /*brightness=*/i);
-    //发送锁存信号使所有驱动工作
-    rgbDriver.latch();
-    delay(100);
+  for(int16_t i = 255; i >= 0; i--) {
+    ledDriver.setMonochromeLed(/*pinNo=*/A3|B3|C3|A2|B2|C2|A1|B1|C1|A0|B0|C0, /*brightness=*/i);
+    ledDriver.latch();//发送锁存信号使所有驱动工作
+    delay(10);
   }
-  
 
   //walk，计数显示，灯亮表示1，灯灭表示0，用灯显示二进制值
   // i = 0 = 0x0表示12个led灯全部熄灭
   // i = 4095 = 0xfff表示12个led灯都亮了
   for (uint16_t i = 0; i <= 4095; i++) {
-      rgbDriver.setMonochromeLed(/*pinNo=*/i, /*brightness=*/255);
-      delay(50);
+    ledDriver.setMonochromeLed(/*pinNo=*/i, /*brightness=*/255);
+    ledDriver.latch();//发送锁存信号使所有驱动工作
+    delay(20);
   }
 
-  //流水灯
+  //流水灯，从C0引脚到A3引脚，每次只亮一个灯
   for (uint16_t i = C0; i <= A3; i<<=1) {
-    rgbDriver.setMonochromeLed(/*pinNo=*/i, /*brightness=*/255);
-    //发送锁存信号使所有驱动工作
-    rgbDriver.latch();
-    delay(1000);
+    ledDriver.setMonochromeLed(/*pinNo=*/i, /*brightness=*/255);
+    ledDriver.latch();//发送锁存信号使所有驱动工作
+    delay(100);
   }
-  //流水灯，反向
+  //流水灯，从A3引脚到C0引脚，每次只亮一个灯
   for (uint16_t i = A3; i >= C0; i>>=1) {
-    rgbDriver.setMonochromeLed(/*pinNo=*/i, /*brightness=*/255);
-    //发送锁存信号使所有驱动工作
-    rgbDriver.latch();
-    delay(1000);
+    ledDriver.setMonochromeLed(/*pinNo=*/i, /*brightness=*/255);
+    ledDriver.latch();//发送锁存信号使所有驱动工作
+    delay(100);
   }
 
-  //级别灯
+  //流水灯，从C0引脚到A3引脚，每次只亮两个灯
+  for (uint16_t i = B0|C0; i <= (A3|B3); i<<=2) {
+    ledDriver.setMonochromeLed(/*pinNo=*/i, /*brightness=*/255);
+    ledDriver.latch();//发送锁存信号使所有驱动工作
+    delay(100);
+  }
+  //流水灯，从A3引脚到C0引脚，每次只亮两个灯
+  for (uint16_t i = A3|B3; i >= (B0|C0); i>>=2) {
+    ledDriver.setMonochromeLed(/*pinNo=*/i, /*brightness=*/255);
+    ledDriver.latch();//发送锁存信号使所有驱动工作
+    delay(100);
+  }
+
+  //流水灯，从C0引脚到A3引脚，逐个点亮
   for (uint16_t i = C0; i <= 4095; i = (i<<1) + C0) {
-    rgbDriver.setMonochromeLed(/*pinNo=*/i, /*brightness=*/255);
-    //发送锁存信号使所有驱动工作
-    rgbDriver.latch();
-    delay(1000);
+    ledDriver.setMonochromeLed(/*pinNo=*/i, /*brightness=*/255);
+    ledDriver.latch();//发送锁存信号使所有驱动工作
+    delay(100);
   }
   
-  //反向级别灯
-  for (uint16_t i = A3; i < 4095; i = (i>>1) +A3) {
-    rgbDriver.setMonochromeLed(/*pinNo=*/i, /*brightness=*/255);
-    //发送锁存信号使所有驱动工作
-    rgbDriver.latch();
-    delay(1000);
-  }
-
-  //弹跳灯，两个灯来回跳跃
-  for (uint16_t i = B0|C0; i < (A3|B3); i<<=1) {
-    rgbDriver.setMonochromeLed(/*pinNo=*/i, /*brightness=*/255);
-    //发送锁存信号使所有驱动工作
-    rgbDriver.latch();
-    delay(1000);
-  }
-  for (uint16_t i = A3|B3; i >= (B0|C0); i>>=1) {
-    rgbDriver.setMonochromeLed(/*pinNo=*/i, /*brightness=*/255);
-    //发送锁存信号使所有驱动工作
-    rgbDriver.latch();
-    delay(1000);
+  //流水灯，从A3引脚到C0引脚，逐个点亮
+  for (uint16_t i = A3; ; i = (i>>1) +A3) {
+    ledDriver.setMonochromeLed(/*pinNo=*/i, /*brightness=*/255);
+    ledDriver.latch();//发送锁存信号使所有驱动工作
+    delay(100);
+    if(i == 4095) break;
   }
 }
